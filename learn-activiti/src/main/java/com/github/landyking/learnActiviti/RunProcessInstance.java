@@ -22,7 +22,7 @@ import java.util.*;
 /**
  * 参考链接 https://www.activiti.org/quick-start
  */
-public class OnboardingRequest {
+public class RunProcessInstance {
     public static void main(String[] args) throws ParseException {
         PropertyConfigurator.configure(BasicUseEngine.class.getResourceAsStream("/log4j-2.properties"));
         ProcessEngineConfiguration cfg = new StandaloneProcessEngineConfiguration()
