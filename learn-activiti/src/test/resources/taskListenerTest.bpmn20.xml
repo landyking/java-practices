@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:activiti="http://activiti.org/bpmn"
+             typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath"
+             targetNamespace="http://www.activiti.org/processdef">
+    <process id="taskListenerTest" name="任务监听器测试" isExecutable="true">
+        <startEvent id="start" name="启动" activiti:initiator="initiator"></startEvent>
+        <userTask id="task1" name="一个任务" activiti:assignee="${initiator}">
+            <extensionElements>
+                <activiti:taskListener event="create" class="com.github.landyking.learnActiviti.MyTaskListener"/>
+            </extensionElements>
+        </userTask>
+        <endEvent id="end" name="结束"></endEvent>
+        <sequenceFlow id="sq1" sourceRef="start" targetRef="task1"/>
+        <sequenceFlow id="sq2" sourceRef="task1" targetRef="end"/>
+    </process>
+
+</definitions>
