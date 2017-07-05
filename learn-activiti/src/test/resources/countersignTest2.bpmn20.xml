@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn"
+             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI"
+             typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath"
+             targetNamespace="http://www.activiti.org/processdef">
+    <process id="countersignTest" name="会签测试" isExecutable="true">
+        <startEvent id="start" name="启动" activiti:initiator="initiator"></startEvent>
+        <userTask id="countSign1" name="会签一" activiti:assignee="${assignee}">
+            <!-- isSequential 设置是否串行执行 -->
+            <multiInstanceLoopCharacteristics
+                    isSequential="false"
+                    activiti:collection="signList"
+                    activiti:elementVariable="assignee"
+            >
+                <completionCondition>${nrOfCompletedInstances/nrOfInstances >= 0.6 }</completionCondition>
+            </multiInstanceLoopCharacteristics>
+        </userTask>
+        <userTask id="stopHere" name="暂停一下" activiti:assignee="waitMan"/>
+        <endEvent id="end" name="结束"></endEvent>
+        <sequenceFlow id="sq1" sourceRef="start" targetRef="countSign1"/>
+        <sequenceFlow id="sq2" sourceRef="countSign1" targetRef="stopHere"/>
+        <sequenceFlow id="sq3" sourceRef="stopHere" targetRef="end"/>
+    </process>
+
+</definitions>
