@@ -30,11 +30,8 @@
         <endEvent id="endOnboarding" name="结束"></endEvent>
         <sequenceFlow id="sid-37A73ACA-2E23-400B-96F3-71F77738DAFA" sourceRef="automatedIntro"
                       targetRef="endOnboarding"></sequenceFlow>
-        <scriptTask id="automatedIntro" name="通用和自动数据输入" scriptFormat="javascript"
-                    activiti:autoStoreVariables="false">
-            <script><![CDATA[var dateAsString = new Date().toString();
-execution.setVariable("autoWelcomeTime", dateAsString);]]></script>
-        </scriptTask>
+        <serviceTask id="automatedIntro" name="通用和自动数据输入"
+                     activiti:class="com.github.landyking.learnActiviti.AutomatedDataDelegate"></serviceTask>
         <sequenceFlow id="automatedIntroPath" sourceRef="decision" targetRef="automatedIntro"></sequenceFlow>
         <sequenceFlow id="personalizedIntroPath" name="&gt;3" sourceRef="decision" targetRef="personalizedIntro">
             <conditionExpression xsi:type="tFormalExpression"><![CDATA[${yearsOfExperience > 3}]]></conditionExpression>
