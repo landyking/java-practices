@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn"
-             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
-             xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI"
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:activiti="http://activiti.org/bpmn"
              typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath"
              targetNamespace="http://www.activiti.org/processdef">
     <process id="countersignTest" name="会签测试" isExecutable="true">
@@ -24,11 +22,22 @@
             />
         </userTask>
         <subProcess id="copyToSubprocess" name="抄送子流程">
+            <multiInstanceLoopCharacteristics
+                    activiti:collection="beCopyToUserList"
+                    activiti:elementVariable="beCopyToUser"
+            />
             <startEvent id="subStart" name="子流程启动"/>
-            <userTask id="copyTo" name="抄送" activiti:assignee="testSubAssignee"/>
+            <userTask id="copyTo" name="抄送" activiti:assignee="${beCopyToUser}"/>
+            <userTask id="copyToFeedback" name="抄送反馈" activiti:assignee="${copyToFeedbackUser}">
+                <multiInstanceLoopCharacteristics
+                        activiti:collection="copyToFeedbackUserList"
+                        activiti:elementVariable="copyToFeedbackUser"
+                />
+            </userTask>
             <endEvent id="subEnd" name="子流程结束"/>
             <sequenceFlow id="subsq1" sourceRef="subStart" targetRef="copyTo"/>
-            <sequenceFlow id="subsq2" sourceRef="copyTo" targetRef="subEnd"/>
+            <sequenceFlow id="subsq2" sourceRef="copyTo" targetRef="copyToFeedback"/>
+            <sequenceFlow id="subsq3" sourceRef="copyToFeedback" targetRef="subEnd"/>
         </subProcess>
         <parallelGateway id="plg2"/>
         <endEvent id="end" name="结束"/>
