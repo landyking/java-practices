@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn"
+             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI"
+             typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath"
+             targetNamespace="http://www.activiti.org/processdef">
+    <process id="countersignTest" name="会签测试" isExecutable="true">
+        <startEvent id="start" name="启动" activiti:initiator="initiator"/>
+        <userTask id="countSign1" name="会签一" activiti:assignee="${countSignAssignee}">
+            <!-- isSequential 设置是否串行执行 -->
+            <multiInstanceLoopCharacteristics
+                    isSequential="false"
+                    activiti:collection="signList"
+                    activiti:elementVariable="countSignAssignee"
+            />
+        </userTask>
+        <userTask id="officeApproval" name="办公室办结" activiti:candidateUsers="${officeCandidateUsers}"/>
+        <parallelGateway id="plg1"/>
+        <userTask id="officeView" name="办公室浏览" activiti:assignee="${officeViewAssignee}">
+            <multiInstanceLoopCharacteristics
+                    activiti:collection="officeViewAssigneeList"
+                    activiti:elementVariable="countSignAssignee"
+            />
+        </userTask>
+        <subProcess id="copyToSubprocess" name="抄送子流程">
+            <startEvent id="subStart" name="子流程启动"/>
+            <userTask id="copyTo" name="抄送" activiti:assignee="testSubAssignee"/>
+            <endEvent id="subEnd" name="子流程结束"/>
+            <sequenceFlow id="subsq1" sourceRef="subStart" targetRef="copyTo"/>
+            <sequenceFlow id="subsq2" sourceRef="copyTo" targetRef="subEnd"/>
+        </subProcess>
+        <parallelGateway id="plg2"/>
+        <endEvent id="end" name="结束"/>
+        <sequenceFlow id="sq1" sourceRef="start" targetRef="countSign1"/>
+        <sequenceFlow id="sq2" sourceRef="countSign1" targetRef="officeApproval"/>
+        <sequenceFlow id="sq3" sourceRef="officeApproval" targetRef="plg1"/>
+        <sequenceFlow id="sq4" sourceRef="plg1" targetRef="officeView"/>
+        <sequenceFlow id="sq5" sourceRef="plg1" targetRef="copyToSubprocess"/>
+        <sequenceFlow id="sq6" sourceRef="officeView" targetRef="plg2"/>
+        <sequenceFlow id="sq7" sourceRef="copyToSubprocess" targetRef="plg2"/>
+        <sequenceFlow id="sq8" sourceRef="plg2" targetRef="end"/>
+    </process>
+
+</definitions>

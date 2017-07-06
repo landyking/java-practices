@@ -22,6 +22,10 @@ import java.io.IOException;
  * note:
  */
 public class LeaveBillDiagram {
+
+    //    private static String resource = "leaveBill.bpmn20.xml";;
+    private static String resource = "subprocessTest.bpmn20.xml";
+
     public static void main(String[] args) throws IOException {
         PropertyConfigurator.configure(BasicUseEngine.class.getResourceAsStream("/log4j-2.properties"));
         ProcessEngineConfiguration configuration = new StandaloneProcessEngineConfiguration()
@@ -33,15 +37,20 @@ public class LeaveBillDiagram {
                 .setDatabaseSchemaUpdate(ProcessEngineConfiguration.DB_SCHEMA_UPDATE_TRUE);
         ProcessEngine processEngine = configuration.buildProcessEngine();
         RepositoryService repositoryService = processEngine.getRepositoryService();
-        Deployment deploy = repositoryService.createDeployment().addClasspathResource("leaveBill.bpmn20.xml").deploy();
+
+        Deployment deploy = repositoryService.createDeployment().addClasspathResource(resource).deploy();
         ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery().deploymentId(deploy.getId()).singleResult();
 
         BpmnModel bpmnModel = repositoryService.getBpmnModel(processDefinition.getId());
         new BpmnAutoLayout(bpmnModel).execute();
-        deploy = repositoryService.createDeployment().addBpmnModel("leaveBill.bpmn20.xml", bpmnModel).deploy();
+        deploy = repositoryService.createDeployment().addBpmnModel(resource, bpmnModel).deploy();
         processDefinition = repositoryService.createProcessDefinitionQuery().deploymentId(deploy.getId()).singleResult();
         File destination = new File("target/diagram.png");
+
         System.out.println(destination.getAbsolutePath());
         FileUtils.copyInputStreamToFile(repositoryService.getProcessDiagram(processDefinition.getId()), destination);
+        File destinationBpmn = new File("target/" + resource);
+        System.out.println(destinationBpmn.getAbsolutePath());
+        FileUtils.copyInputStreamToFile(repositoryService.getResourceAsStream(deploy.getId(), resource), destinationBpmn);
     }
 }
