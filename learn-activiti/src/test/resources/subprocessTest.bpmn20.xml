@@ -4,6 +4,10 @@
              typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath"
              targetNamespace="http://www.activiti.org/processdef">
     <process id="countersignTest" name="会签测试" isExecutable="true">
+        <extensionElements>
+            <activiti:executionListener event="start"
+                                        class="com.github.landyking.learnActiviti.listener.ProcessInstanceListener"/>
+        </extensionElements>
         <startEvent id="start" name="启动" activiti:initiator="initiator"/>
         <userTask id="countSign1" name="会签一" activiti:assignee="${countSignAssignee}">
             <!-- isSequential 设置是否串行执行 -->
@@ -13,12 +17,16 @@
                     activiti:elementVariable="countSignAssignee"
             />
         </userTask>
-        <userTask id="officeApproval" name="办公室办结" activiti:candidateUsers="${officeCandidateUsers}"/>
+        <userTask id="officeApproval" name="办公室办结" activiti:candidateUsers="${officeCandidateUsers}">
+            <extensionElements>
+                <activiti:taskListener event="create" class="com.github.landyking.learnActiviti.listener.MyTaskListener"/>
+            </extensionElements>
+        </userTask>
         <parallelGateway id="plg1"/>
         <userTask id="officeView" name="办公室浏览" activiti:assignee="${officeViewAssignee}">
             <multiInstanceLoopCharacteristics
                     activiti:collection="officeViewAssigneeList"
-                    activiti:elementVariable="countSignAssignee"
+                    activiti:elementVariable="officeViewAssignee"
             />
         </userTask>
         <subProcess id="copyToSubprocess" name="抄送子流程">
