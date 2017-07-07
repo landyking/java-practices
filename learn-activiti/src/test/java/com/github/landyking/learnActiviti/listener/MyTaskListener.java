@@ -3,22 +3,20 @@ package com.github.landyking.learnActiviti.listener;
 import org.activiti.engine.delegate.DelegateTask;
 import org.activiti.engine.delegate.TaskListener;
 
-import java.util.Arrays;
+import java.util.UUID;
 
 /**
- * Description：TODO <br/>
  *
  * @author: Landy
- * @date: 2017/7/7 12:00
+ * @date: 2017/7/5 16:55
  * note:
  */
 public class MyTaskListener implements TaskListener {
+    public static final String USER_NAME = UUID.randomUUID().toString();
+
     @Override
     public void notify(DelegateTask delegateTask) {
-        if (delegateTask.getEventName().equals("create")) {
-            System.out.println("task create ********************");
-            delegateTask.setVariable("officeViewAssigneeList", Arrays.asList("viewerOne", "viewerTwo"));
-            delegateTask.setVariable("beCopyToUserList", Arrays.asList("beCopyToOne", "beCopyToTwo"));
-        }
+        delegateTask.setAssignee(USER_NAME);
+        System.out.println("set task assignee: " + USER_NAME);
     }
 }

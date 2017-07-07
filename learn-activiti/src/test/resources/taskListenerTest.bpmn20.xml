@@ -7,7 +7,7 @@
         <startEvent id="start" name="启动" activiti:initiator="initiator"></startEvent>
         <userTask id="task1" name="一个任务" activiti:assignee="${initiator}">
             <extensionElements>
-                <activiti:taskListener event="create" class="com.github.landyking.learnActiviti.MyTaskListener"/>
+                <activiti:taskListener event="create" class="com.github.landyking.learnActiviti.listener.MyTaskListener"/>
             </extensionElements>
         </userTask>
         <endEvent id="end" name="结束"></endEvent>

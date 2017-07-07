@@ -1,5 +1,6 @@
 package com.github.landyking.learnActiviti;
 
+import com.github.landyking.learnActiviti.listener.MyTaskListener;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
@@ -15,7 +16,6 @@ import org.junit.Test;
 
 
 /**
- * Description：TODO <br/>
  *
  * @author: Landy
  * @date: 2017/7/5 16:52
@@ -41,7 +41,7 @@ public class TaskListenerTest {
         TaskService taskService = activitiRule.getTaskService();
         Task task = taskService.createTaskQuery().processInstanceId(instance.getProcessInstanceId()).singleResult();
         Assert.assertNotNull(task);
-        Assert.assertEquals("受托人不一致",MyTaskListener.USER_NAME, task.getAssignee() );
+        Assert.assertEquals("受托人不一致", MyTaskListener.USER_NAME, task.getAssignee() );
         taskService.complete(task.getId());
     }
 }

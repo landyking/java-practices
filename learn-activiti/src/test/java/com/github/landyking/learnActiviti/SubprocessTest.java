@@ -47,7 +47,7 @@ public class SubprocessTest {
         TaskService taskService = activitiRule.getTaskService();
         showCurrentTaskList(instance, taskService);
         while (instance != null && !instance.isEnded()) {
-            List<Task> list = taskService.createTaskQuery().processInstanceId(instance.getProcessInstanceId()).list();
+            List<Task> list = taskService.createTaskQuery().processInstanceId(instance.getProcessInstanceId()).orderByTaskCreateTime().asc().list();
             Task task = list.get(0);
             taskService.complete(task.getId());
             System.out.println("\n##################完成任务：" + task.getName() + "," + task.getAssignee());

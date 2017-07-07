@@ -19,7 +19,7 @@
         </userTask>
         <userTask id="officeApproval" name="办公室办结" activiti:candidateUsers="${officeCandidateUsers}">
             <extensionElements>
-                <activiti:taskListener event="create" class="com.github.landyking.learnActiviti.listener.MyTaskListener"/>
+                <activiti:taskListener event="complete" class="com.github.landyking.learnActiviti.listener.OfficeApprovalTaskListener"/>
             </extensionElements>
         </userTask>
         <parallelGateway id="plg1"/>
@@ -35,7 +35,11 @@
                     activiti:elementVariable="beCopyToUser"
             />
             <startEvent id="subStart" name="子流程启动"/>
-            <userTask id="copyTo" name="抄送" activiti:assignee="${beCopyToUser}"/>
+            <userTask id="copyTo" name="抄送" activiti:assignee="${beCopyToUser}">
+                <extensionElements>
+                    <activiti:taskListener event="complete" class="com.github.landyking.learnActiviti.listener.CopyToEndTaskListener"/>
+                </extensionElements>
+            </userTask>
             <userTask id="copyToFeedback" name="抄送反馈" activiti:assignee="${copyToFeedbackUser}">
                 <multiInstanceLoopCharacteristics
                         activiti:collection="copyToFeedbackUserList"
