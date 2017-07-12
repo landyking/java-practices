@@ -24,7 +24,7 @@ import java.io.IOException;
 public class LeaveBillDiagram {
 
     //    private static String resource = "leaveBill.bpmn20.xml";;
-    private static String resource = "subprocessTest.bpmn20.xml";
+    private static String resource = "revokeLeaveBill.bpmn20.xml";
 
     public static void main(String[] args) throws IOException {
         PropertyConfigurator.configure(BasicUseEngine.class.getResourceAsStream("/log4j-2.properties"));

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:activiti="http://activiti.org/bpmn"
+             typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath"
+             targetNamespace="http://www.activiti.org/processdef">
+
+    <process id="revokeLeaveBill" name="请假流程" isExecutable="true">
+        <startEvent id="startLeaveBill" name="启动" activiti:initiator="initiator"></startEvent>
+        <userTask id="createBill" name="提交申请" activiti:assignee="user"></userTask>
+        <parallelGateway id="cancelOrFlow" name="取消或继续审批"/>
+        <userTask id="revokeApply" name="撤销申请"/>
+        <userTask id="leaderApproval" name="上级领导审批" activiti:assignee="leader"></userTask>
+        <userTask id="bossApproval" name="经理审批" activiti:assignee="boss"></userTask>
+        <endEvent id="endLeaveBill" name="结束">
+            <terminateEventDefinition id="TerminateEventDefinition_2"/>
+        </endEvent>
+        <endEvent id="endRevoke" name="结束">
+            <terminateEventDefinition id="TerminateEventDefinition_1"/>
+        </endEvent>
+
+        <sequenceFlow id="sf1" sourceRef="startLeaveBill" targetRef="createBill"/>
+        <sequenceFlow id="sf2" sourceRef="createBill" targetRef="cancelOrFlow"/>
+        <sequenceFlow id="sf23" sourceRef="cancelOrFlow" targetRef="leaderApproval"/>
+        <sequenceFlow id="sf3" sourceRef="leaderApproval" targetRef="bossApproval"/>
+        <sequenceFlow id="sf4" sourceRef="bossApproval" targetRef="endLeaveBill"/>
+        <sequenceFlow id="sf21" sourceRef="cancelOrFlow" targetRef="revokeApply"/>
+        <sequenceFlow id="sf41" sourceRef="revokeApply" targetRef="endRevoke"/>
+    </process>
+</definitions>
