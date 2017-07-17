@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:activiti="http://activiti.org/bpmn"
+             typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath"
+             targetNamespace="http://www.activiti.org/processdef">
+    <process id="candidateTest" name="候选测试" isExecutable="true">
+        <startEvent id="start" name="启动" activiti:initiator="initiator"/>
+        <userTask id="officeApproval" name="办公室办结" activiti:candidateUsers="${officeCandidateUsers}" activiti:assignee="memeda">
+        </userTask>
+        <endEvent id="end" name="结束"/>
+        <sequenceFlow id="sq1" sourceRef="start" targetRef="officeApproval"/>
+        <sequenceFlow id="sq8" sourceRef="officeApproval" targetRef="end"/>
+    </process>
+
+</definitions>
