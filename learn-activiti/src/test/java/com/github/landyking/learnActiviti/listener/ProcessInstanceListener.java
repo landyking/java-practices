@@ -4,7 +4,6 @@ import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.delegate.ExecutionListener;
 
 import java.util.Arrays;
-import java.util.HashMap;
 
 /**
  * Description：TODO <br/>
@@ -20,6 +19,11 @@ public class ProcessInstanceListener implements ExecutionListener {
             System.out.println("***************** start ********************");
             execution.setVariable("signList", Arrays.asList("Landy", "John", "Marry", "Kubee"));
             execution.setVariable("officeCandidateUsers", "officeOne,officeTwo");
+        } else if ("end".equals(execution.getEventName())) {
+            System.out.println("************ end ****************");
+            System.out.println("\t\tprocess key :"+execution.getProcessDefinitionId());
+            System.out.println("\t\tbusiness key :"+execution.getProcessBusinessKey());
+            System.out.println("\t\trevoked :"+execution.getVariable("revoked"));
         }
     }
 }

@@ -5,6 +5,10 @@
              targetNamespace="http://www.activiti.org/processdef">
 
     <process id="revokeLeaveBill" name="请假流程" isExecutable="true">
+        <extensionElements>
+            <activiti:executionListener event="end"
+                                        class="com.github.landyking.learnActiviti.listener.ProcessInstanceListener"/>
+        </extensionElements>
         <startEvent id="startLeaveBill" name="启动" activiti:initiator="initiator"></startEvent>
         <userTask id="createBill" name="提交申请" activiti:assignee="user"></userTask>
         <parallelGateway id="cancelOrFlow" name="取消或继续审批"/>

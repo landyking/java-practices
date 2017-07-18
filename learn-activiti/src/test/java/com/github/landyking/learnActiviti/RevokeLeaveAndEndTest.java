@@ -12,6 +12,7 @@ import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -29,37 +30,63 @@ public class RevokeLeaveAndEndTest {
     public ActivitiRule activitiRule = new ActivitiRule();
 
     @Test
-    public void testCountersign() throws Exception {
-        doWork("revokeLeaveBill.bpmn20.xml");
+    public void testRevoke1() throws Exception {
+        RepositoryService repositoryService = activitiRule.getRepositoryService();
+        Deployment deploy = repositoryService.createDeployment().addClasspathResource("revokeLeaveBill.bpmn20.xml").deploy();
+        System.out.println("部署成功：" + deploy.getId() + "," + deploy.getName());
+        RuntimeService runtimeService = activitiRule.getRuntimeService();
+        ProcessInstance instance = runtimeService.startProcessInstanceByKey("revokeLeaveBill","business key 0001");
+        System.out.println("启动流程实例:" + instance.getId() + "," + instance.getName() + "," + instance.getBusinessKey());
+        TaskService taskService = activitiRule.getTaskService();
+        showCurrentTaskList(instance, taskService);
+        Task createBill = taskService.createTaskQuery().taskDefinitionKey("createBill").singleResult();
+        taskService.complete(createBill.getId());
+        System.out.println("##### 完成任务：" + createBill.getName());
+        showCurrentTaskList(instance, taskService);
+        showProcessDone(runtimeService, instance);
+        Task leaderApproval = taskService.createTaskQuery().taskDefinitionKey("leaderApproval").singleResult();
+        taskService.complete(leaderApproval.getId());
+        System.out.println("#### 完成任务：" + leaderApproval.getName());
+        Task bossApproval = taskService.createTaskQuery().taskDefinitionKey("bossApproval").singleResult();
+        HashMap<String, Object> vars = new HashMap<String, Object>();
+        vars.put("revoked", false);
+        taskService.complete(bossApproval.getId(),vars);
+        System.out.println("#### 完成任务：" + bossApproval.getName());
+        showCurrentTaskList(instance, taskService);
+        showProcessDone(runtimeService, instance);
+    }
+    @Test
+    public void testRevoke2() throws Exception {
+        RepositoryService repositoryService = activitiRule.getRepositoryService();
+        Deployment deploy = repositoryService.createDeployment().addClasspathResource("revokeLeaveBill.bpmn20.xml").deploy();
+        System.out.println("部署成功：" + deploy.getId() + "," + deploy.getName());
+        RuntimeService runtimeService = activitiRule.getRuntimeService();
+        ProcessInstance instance = runtimeService.startProcessInstanceByKey("revokeLeaveBill","business key 0001");
+        System.out.println("启动流程实例:" + instance.getId() + "," + instance.getName() + "," + instance.getBusinessKey());
+        TaskService taskService = activitiRule.getTaskService();
+        showCurrentTaskList(instance, taskService);
+        Task createBill = taskService.createTaskQuery().taskDefinitionKey("createBill").singleResult();
+        taskService.complete(createBill.getId());
+        System.out.println("##### 完成任务：" + createBill.getName());
+        showCurrentTaskList(instance, taskService);
+        showProcessDone(runtimeService, instance);
+        Task bossApproval = taskService.createTaskQuery().taskDefinitionKey("revokeApply").singleResult();
+        HashMap<String, Object> vars = new HashMap<String, Object>();
+        vars.put("revoked", true);
+        taskService.complete(bossApproval.getId(),vars);
+        System.out.println("#### 完成任务：" + bossApproval.getName());
+        showCurrentTaskList(instance, taskService);
+        showProcessDone(runtimeService, instance);
+    }
+
+    private void showProcessDone(RuntimeService runtimeService, ProcessInstance instance) {
+        instance = runtimeService.createProcessInstanceQuery().processInstanceId(instance.getProcessInstanceId()).singleResult();
+        System.out.println("!!!!!!!!!!!!!!!实例完成：" + (instance == null));
     }
 
 
     private void doWork(String resource) {
-        RepositoryService repositoryService = activitiRule.getRepositoryService();
-        Deployment deploy = repositoryService.createDeployment().addClasspathResource(resource).deploy();
-        System.out.println("部署成功：" + deploy.getId() + "," + deploy.getName());
-        RuntimeService runtimeService = activitiRule.getRuntimeService();
-        ProcessInstance instance = runtimeService.startProcessInstanceByKey("revokeLeaveBill");
-        System.out.println("启动流程实例:" + instance.getId() + "," + instance.getName() + "," + instance.getBusinessKey());
-        TaskService taskService = activitiRule.getTaskService();
-        showCurrentTaskList(instance, taskService);
-        while (instance != null && !instance.isEnded()) {
-            List<Task> list = taskService.createTaskQuery().processInstanceId(instance.getProcessInstanceId()).list();
-            Task task = null;
-            for (Task one : list) {
-                if (!one.getTaskDefinitionKey().equals("revokeApply")) {
-                    task = one;
-                }
-            }
-            if (task == null) {
-                System.out.println("不应该出现");
-            }
-            taskService.complete(task.getId());
-            System.out.println("\n##################完成任务：" + task.getName() + "," + task.getAssignee());
-            showCurrentTaskList(instance, taskService);
 
-            instance = runtimeService.createProcessInstanceQuery().processInstanceId(instance.getProcessInstanceId()).singleResult();
-        }
     }
 
     private void showCurrentTaskList(ProcessInstance instance, TaskService taskService) {
