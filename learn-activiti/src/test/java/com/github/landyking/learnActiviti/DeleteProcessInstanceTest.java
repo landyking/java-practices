@@ -22,7 +22,7 @@ import org.junit.Test;
 public class DeleteProcessInstanceTest {
     @BeforeClass
     public static void beforeAll() {
-        PropertyConfigurator.configure(BasicUseEngine.class.getResourceAsStream("/log4j-3.properties"));
+        PropertyConfigurator.configure(BasicUseEngine.class.getResourceAsStream("/log4j-2.properties"));
     }
 
     @Rule
@@ -48,13 +48,16 @@ public class DeleteProcessInstanceTest {
 
     private void showLeaderTask(TaskService taskService) {
         long involvedCount = taskService.createTaskQuery().taskInvolvedUser("leader").count();
-        System.out.println("involvedCount involved task count : " + involvedCount);
+        System.out.println("task involvedCount : " + involvedCount);
         long assigneeCount = taskService.createTaskQuery().taskAssignee("leader").count();
-        System.out.println("involvedCount assignee task count : " + assigneeCount);
+        System.out.println("task assigneeCount : " + assigneeCount);
         long candidateCount = taskService.createTaskQuery().taskCandidateUser("leader").count();
-        System.out.println("involvedCount candidate task count : " + candidateCount);
+        System.out.println("task candidateCount : " + candidateCount);
         long candidateOrAssignedCount = taskService.createTaskQuery().taskCandidateOrAssigned("leader").count();
-        System.out.println("involvedCount candidateOrAssigned task count : " + candidateOrAssignedCount);
+        System.out.println("task candidateOrAssignedCount : " + candidateOrAssignedCount);
+        long ownerCount = taskService.createTaskQuery().taskOwner("leader").count();
+        System.out.println("task ownerCount : " + ownerCount);
+
     }
 
 }
