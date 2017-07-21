@@ -5,8 +5,7 @@
              targetNamespace="http://www.activiti.org/processdef">
     <process id="candidateTest" name="候选测试" isExecutable="true">
         <startEvent id="start" name="启动" activiti:initiator="initiator"/>
-        <userTask id="officeApproval" name="办公室办结" activiti:candidateUsers="${officeCandidateUsers}"
-                  activiti:assignee="memeda">
+        <userTask id="officeApproval" name="办公室办结" activiti:candidateUsers="${officeCandidateUsers}">
             <extensionElements>
                 <activiti:taskListener event="complete"
                                        class="com.github.landyking.learnActiviti.listener.CandidateUserTaskListener"/>

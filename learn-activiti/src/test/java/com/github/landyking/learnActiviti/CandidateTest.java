@@ -2,6 +2,7 @@ package com.github.landyking.learnActiviti;
 
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
+import org.activiti.engine.TaskService;
 import org.activiti.engine.identity.User;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.runtime.ProcessInstance;
@@ -22,7 +23,7 @@ import java.util.*;
 public class CandidateTest {
     @BeforeClass
     public static void beforeAll() {
-        PropertyConfigurator.configure(BasicUseEngine.class.getResourceAsStream("/log4j-3.properties"));
+        PropertyConfigurator.configure(BasicUseEngine.class.getResourceAsStream("/log4j-2.properties"));
     }
 
     @Rule
@@ -43,6 +44,27 @@ public class CandidateTest {
                 .taskDefinitionKey("officeApproval").singleResult();
         System.out.println("officeApproval : " + officeApprovalTask.getName());
         System.out.println("candidate users : " + getTaskCandidate(officeApprovalTask.getId()));
+    }
+
+    @Test
+    public void test2() throws Exception {
+        RepositoryService repositoryService = activitiRule.getRepositoryService();
+        Deployment deploy = repositoryService.createDeployment().addClasspathResource("candidateTest2.bpmn20.xml").deploy();
+        System.out.println("部署成功：" + deploy.getId() + "," + deploy.getName());
+        RuntimeService runtimeService = activitiRule.getRuntimeService();
+        HashMap<String, Object> variables = new HashMap<String, Object>();
+        variables.put("officeCandidateUsers", Arrays.asList("hello", "world", "Lucy"));
+        ProcessInstance instance = runtimeService.startProcessInstanceByKey("candidateTest", variables);
+
+        TaskService taskService = activitiRule.getTaskService();
+        Task officeApprovalTask = taskService.createTaskQuery().taskCandidateUser("hello")
+                .processInstanceId(instance.getProcessInstanceId())
+                .taskDefinitionKey("officeApproval").singleResult();
+        System.out.println("officeApproval : " + officeApprovalTask.getName());
+        System.out.println("candidate users : " + getTaskCandidate(officeApprovalTask.getId()));
+        taskService.claim(officeApprovalTask.getId(), "hello");
+        taskService.complete(officeApprovalTask.getId());
+
     }
 
     private Set<String> getTaskCandidate(String taskId) {
