@@ -13,4 +13,7 @@
 1.  LeaveBillDiagram：根据xml生成图片，自动调整线框。
 1.  TaskListenerTest：任务监听器的基本使用。
 1.  SubprocessTest：子流程。兼具复杂功能的展示。
+1.  CandidateTest: 候选人操作测试
+1.  spring.SpringIntegrationTest  spring整合，注入bean，方法调用
+1.  spring.SpringTaskListener   spring整合，注入TaskListener
  
