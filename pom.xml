@@ -10,6 +10,7 @@
     <modules>
         <module>learn-activiti</module>
         <module>learn-json</module>
+        <module>learn-jasperReports</module>
     </modules>
     <packaging>pom</packaging>
 
