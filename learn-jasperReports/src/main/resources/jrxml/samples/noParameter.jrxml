@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="elements" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="880976ab-05e0-424a-a32b-35b5149ec6a0">
+    <property name="ireport.callouts" value="##Thu Jan 21 15:19:19 CET 2010\ncallouts.7.bounds=446,671,166,89\ncallouts.2.bounds=1,668,270,95\ncallouts.5.bounds=354,423,261,104\ncallouts.2.pins=127,609;\ncallouts.4.text=Text fields can grown vertically if the text provided does not fit the size set at design time (property Stretch with overflow).\ncallouts.3.pins=242,356;\ncallouts.5.text=A Frame element is a container for other elements and can have a border. The size of the frame can stretch according to the content (which can grown at run time)\ncallouts.4.pins=381,638;\ncallouts.6.text=Use an Empty datasource to run this report\ncallouts.5.pins=269,426;\ncallouts.7.text=A textfield has a type to identify the type of value to print (i.e. a text or a date or a number and so on...)\ncallouts.3.bounds=350,290,223,66\ncallouts.6.bounds=415,21,239,38\ncallouts.1.bounds=351,195,241,59\ncallouts.4.bounds=271,669,177,92\ncallouts.7.pins=527,575;556,606;\ncallouts.1.text=Rectangle, Round Rectangle, Ellipse and line elements.\ncallouts.2.text=Labels and text fields. A label displays static text, while a text field shows the text produced using an expression, useful to print the value of a field or a variable. The text can be formatted. Both these elements can have a border and specific padding.\ncallouts.1.pins=130,219;\ncallouts.3.text=Images can be loaded from a file, from an url or even produced dynamically using an expression"/>
+    <property name="ireport.zoom" value="1.0"/>
+    <property name="ireport.x" value="0"/>
+    <property name="ireport.y" value="0"/>
+    <background>
+        <band splitType="Stretch"/>
+    </background>
+    <title>
+        <band height="654" splitType="Stretch">
+            <rectangle>
+                <reportElement x="10" y="180" width="100" height="20" forecolor="#315B77" backcolor="#A3DFDF" uuid="1d03dfad-78cb-4bdf-9699-0bd8f152810f"/>
+                <graphicElement>
+                    <pen lineWidth="3.0"/>
+                </graphicElement>
+            </rectangle>
+            <ellipse>
+                <reportElement x="10" y="227" width="100" height="39" uuid="9276af8c-d3b2-47ec-9ddf-c807f58473a0"/>
+            </ellipse>
+            <rectangle radius="10">
+                <reportElement x="138" y="180" width="100" height="20" uuid="96c8897d-134f-4425-ab6a-f847534384e5"/>
+            </rectangle>
+            <line>
+                <reportElement x="138" y="220" width="100" height="46" uuid="57e2ad50-5de1-4391-b85e-149629e53d54"/>
+            </line>
+            <staticText>
+                <reportElement x="5" y="565" width="144" height="24" uuid="a4b279e4-8d33-4876-835d-ca1fe04d55a1"/>
+                <textElement>
+                    <font size="18"/>
+                </textElement>
+                <text><![CDATA[Static text]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="5" y="608" width="144" height="27" uuid="23cb2c5b-62e2-41ec-8090-b358ff698877"/>
+                <textElement>
+                    <font size="18"/>
+                </textElement>
+                <textFieldExpression><![CDATA["textfield"]]></textFieldExpression>
+            </textField>
+            <frame>
+                <reportElement x="5" y="410" width="258" height="83" forecolor="#FF3333" uuid="d41b57fe-39aa-4acd-b490-51f5520954c0"/>
+                <box>
+                    <pen lineWidth="1.0" lineStyle="Dashed"/>
+                    <topPen lineWidth="1.0" lineStyle="Dashed"/>
+                    <leftPen lineWidth="1.0" lineStyle="Dashed"/>
+                    <bottomPen lineWidth="1.0" lineStyle="Dashed"/>
+                    <rightPen lineWidth="1.0" lineStyle="Dashed"/>
+                </box>
+                <rectangle>
+                    <reportElement x="144" y="14" width="100" height="53" backcolor="#E9E8E8" uuid="2c01f387-2123-4b6c-af8b-dfa717bd0960"/>
+                </rectangle>
+                <rectangle>
+                    <reportElement x="12" y="14" width="100" height="20" backcolor="#E9E8E8" uuid="ab890479-2ef6-4faa-8e89-d59a1a36a872"/>
+                </rectangle>
+                <rectangle>
+                    <reportElement x="12" y="47" width="100" height="20" backcolor="#E9E8E8" uuid="0084972b-0ece-4e35-820f-721a4d00e43c"/>
+                </rectangle>
+            </frame>
+            <textField isStretchWithOverflow="true">
+                <reportElement x="169" y="569" width="209" height="66" uuid="c66b46ad-1d02-49da-9d88-c7af114f2aa1"/>
+                <box topPadding="10" leftPadding="10" bottomPadding="10" rightPadding="10"/>
+                <textElement>
+                    <font size="12"/>
+                </textElement>
+                <textFieldExpression><![CDATA["iReport is the free, open source report designer for JasperReports. Create very complex layouts containing charts, images, subreports, crosstabs and much more. Access your data through JDBC, TableModels, JavaBeans, XML, Hibernate, CSV, and custom sources. Then publish your reports as PDF, RTF, XML, XLS, CSV, HTML, XHTML, text, DOCX, or OpenOffice."]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="0" y="19" width="555" height="31" uuid="ee360ddc-6778-432c-bbf3-4b33aa1d322c"/>
+                <textElement textAlignment="Center" verticalAlignment="Top">
+                    <font size="20" isBold="false"/>
+                </textElement>
+                <text><![CDATA[Elements in a report]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="50" width="555" height="78" uuid="e51391bd-11ee-4263-87e3-fcf4be4fb811"/>
+                <textElement textAlignment="Justified" verticalAlignment="Top">
+                    <font size="14"/>
+                </textElement>
+                <text><![CDATA[A report is composed by a set of bands which contain elements. Elements are presented in the iReport palette. They can be simple shapes like the rectangle and the line, or complex objects like a subreport or a crosstab. The most common ones are presented in this report.]]></text>
+            </staticText>
+            <line>
+                <reportElement x="73" y="147" width="482" height="1" uuid="6337df1c-e100-4f9f-b1ac-2f0fec73e9b6"/>
+            </line>
+            <staticText>
+                <reportElement x="0" y="128" width="73" height="32" uuid="75fd38cc-320f-4f81-a061-ffef99c2a1e0"/>
+                <textElement verticalAlignment="Middle">
+                    <font size="16" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Shapes]]></text>
+            </staticText>
+            <line>
+                <reportElement x="50" y="528" width="505" height="1" uuid="f9b8824b-80d8-49ff-a617-63f8e5c7c436"/>
+            </line>
+            <staticText>
+                <reportElement x="0" y="509" width="50" height="32" uuid="841720a4-1544-409f-b788-2e5e29dc9dc2"/>
+                <textElement verticalAlignment="Middle">
+                    <font fontName="宋体" size="16" isBold="true" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+                </textElement>
+                <text><![CDATA[T黄]]></text>
+            </staticText>
+            <textField pattern="EEEEE dd MMMMM yyyy">
+                <reportElement x="411" y="557" width="144" height="20" uuid="39b5258f-253d-4eff-a5e5-1c41956f8cd0"/>
+                <textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="411" y="589" width="144" height="20" uuid="afd08c3a-0be8-47ea-abfd-34eb84c88183"/>
+                <textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+            </textField>
+        </band>
+    </title>
+    <pageHeader>
+        <band splitType="Stretch"/>
+    </pageHeader>
+    <columnHeader>
+        <band splitType="Stretch"/>
+    </columnHeader>
+    <detail>
+        <band splitType="Stretch"/>
+    </detail>
+    <columnFooter>
+        <band splitType="Stretch"/>
+    </columnFooter>
+    <pageFooter>
+        <band splitType="Stretch"/>
+    </pageFooter>
+    <summary>
+        <band splitType="Stretch"/>
+    </summary>
+</jasperReport>
