@@ -23,9 +23,9 @@ import java.util.HashMap;
  * @date: 2017/8/4 10:08
  * note:
  */
-public class MasterWithSubreportToPDF {
+public class SubreportWithImgToPDF {
     public static void main(String[] args) throws IOException {
-        JasperMaster help = new JasperMaster("/jrxml/samples/masterWithSubreport.jrxml", "masterWithSubreport.pdf") {
+        JasperMaster help = new JasperMaster("/jrxml/samples/subreportWithImg_master.jrxml", "subreportWithImg.pdf") {
 
             @Override
             public JasperPrint fillReport(JasperReport jasperReport) throws JRException {
@@ -38,6 +38,17 @@ public class MasterWithSubreportToPDF {
                 System.out.println("img1: " + file);
                 parameters.put("img1", file);
                 parameters.put("img2", Utils.getResourceAsStream(name));
+                String path = Utils.getResource("/jrxml/samples/subreportWithImg_subreport.jrxml").getPath();
+                System.out.println("subreport path: " + path);
+                String subJasperFile = JasperCompileManager.compileReportToFile(path);
+                System.out.println("compile subreport: " + subJasperFile);
+                parameters.put("subname", subJasperFile);
+
+                HashMap subparams = new HashMap();
+                subparams.put("testsub1", "吃葡萄不吐葡萄皮，不吃葡萄倒吐葡萄皮！");
+                subparams.put("testsub2", Utils.getResourceAsStream(name));
+
+                parameters.put("subparams", subparams);
                 return JasperFillManager.fillReport(
                         jasperReport, parameters, new JREmptyDataSource());
             }

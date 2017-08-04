@@ -3,17 +3,19 @@
 	<property name="ireport.callouts" value="##Thu Aug 03 14:09:42 CST 2017"/>
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="4"/>
 	<parameter name="param1" class="java.lang.String"/>
 	<parameter name="param2" class="java.lang.String"/>
 	<parameter name="param3" class="java.lang.String"/>
 	<parameter name="img1" class="java.lang.String"/>
 	<parameter name="img2" class="java.io.InputStream"/>
+	<parameter name="subname" class="java.lang.String"/>
+	<parameter name="subparams" class="java.util.Map"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="300" splitType="Stretch">
+		<band height="400" splitType="Stretch">
 			<staticText>
 				<reportElement x="0" y="19" width="555" height="31" uuid="ee360ddc-6778-432c-bbf3-4b33aa1d322c"/>
 				<textElement textAlignment="Center" verticalAlignment="Top">
@@ -54,19 +56,41 @@
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="288" y="178" width="117" height="47" uuid="83ca4c1e-7888-4dd6-8eb1-9582c27a5796"/>
-				<textElement>
+				<textElement textAlignment="Justified">
 					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{param3}]]></textFieldExpression>
 			</textField>
 			<image>
 				<reportElement x="32" y="240" width="87" height="50" uuid="97133685-3ec7-4295-95bd-d9ffbae25682"/>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Dashed"/>
+				</graphicElement>
 				<imageExpression><![CDATA[$P{img1}]]></imageExpression>
 			</image>
 			<image>
-				<reportElement x="171" y="240" width="100" height="50" uuid="de52bda8-9e31-436f-9411-b3d772316e55"/>
+				<reportElement x="157" y="240" width="100" height="50" uuid="de52bda8-9e31-436f-9411-b3d772316e55"/>
 				<imageExpression><![CDATA[$P{img2}]]></imageExpression>
 			</image>
+			<frame>
+				<reportElement mode="Transparent" x="32" y="310" width="350" height="80" uuid="636d36a8-8cef-4061-a230-82133c06535f"/>
+				<box>
+					<pen lineWidth="1.0" lineStyle="Dashed"/>
+					<topPen lineWidth="1.0" lineStyle="Dashed"/>
+					<leftPen lineWidth="1.0" lineStyle="Dashed"/>
+					<bottomPen lineWidth="1.0" lineStyle="Dashed"/>
+					<rightPen lineWidth="1.0" lineStyle="Dashed"/>
+				</box>
+				<subreport>
+					<reportElement x="0" y="5" width="350" height="70" uuid="e7aa5920-ade5-48b7-a3fd-8296cde3271b"/>
+					<parametersMapExpression><![CDATA[$P{subparams}]]></parametersMapExpression>
+					<subreportExpression><![CDATA[$P{subname}]]></subreportExpression>
+				</subreport>
+			</frame>
+			<textField>
+				<reportElement x="284" y="240" width="255" height="50" uuid="aaa6dac0-9c07-4bb9-93a6-552368e99f21"/>
+				<textFieldExpression><![CDATA[$P{subname}]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
 	<pageHeader>
