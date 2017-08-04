@@ -35,6 +35,9 @@ public abstract class JasperMaster {
             File jasperReportsDir = new File(targetDir, JASPER_REPORTS);
             jasperReportsDir.mkdirs();
             URL resource = Utils.getResource(classResourcePath);
+            if (resource == null) {
+                System.out.println("Can't found resource: " + classResourcePath);
+            }
             System.out.println("read resource: " + resource.getFile());
             jasperReport = JasperCompileManager.compileReport(new FileInputStream(resource.getFile()));
             jasperPrint = fillReport(jasperReport);

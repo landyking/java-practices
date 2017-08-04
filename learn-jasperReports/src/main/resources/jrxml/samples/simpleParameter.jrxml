@@ -51,7 +51,7 @@
                 <textFieldExpression><![CDATA[$P{param2}]]></textFieldExpression>
             </textField>
             <textField isBlankWhenNull="true">
-                <reportElement x="288" y="178" width="100" height="20" uuid="83ca4c1e-7888-4dd6-8eb1-9582c27a5796"/>
+                <reportElement x="288" y="178" width="117" height="47" uuid="83ca4c1e-7888-4dd6-8eb1-9582c27a5796"/>
                 <textElement>
                     <font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
                 </textElement>

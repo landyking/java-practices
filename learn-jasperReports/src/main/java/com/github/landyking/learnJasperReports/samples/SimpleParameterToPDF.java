@@ -27,7 +27,7 @@ public class SimpleParameterToPDF {
                 HashMap parameters = new HashMap();
                 parameters.put("param1", "first");
                 parameters.put("param2", "second");
-                parameters.put("param3", "我是个好人");
+                parameters.put("param3", "我是个好人，但是从来都没有在地上见到过钱！");
                 return JasperFillManager.fillReport(
                         jasperReport, parameters, new JREmptyDataSource());
             }

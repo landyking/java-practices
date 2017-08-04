@@ -1,6 +1,7 @@
 package com.github.landyking.learnJasperReports.samples;
 
 import com.github.landyking.learnJasperReports.JasperMaster;
+import com.github.landyking.learnJasperReports.Utils;
 import net.sf.jasperreports.engine.*;
 
 import java.util.HashMap;
@@ -21,12 +22,21 @@ import java.util.HashMap;
  */
 public class SimpleParameterWithImageToPDF {
     public static void main(String[] args) {
-        new JasperMaster("/jrxml/jasperreports_demo.jrxml", "simple_report.pdf") {
+        new JasperMaster("/jrxml/samples/simpleParameterWithImage.jrxml", "simple_report_img.pdf") {
 
             @Override
             public JasperPrint fillReport(JasperReport jasperReport) throws JRException {
+                HashMap parameters = new HashMap();
+                parameters.put("param1", "Hello World");
+                parameters.put("param2", "李元霸");
+                parameters.put("param3", "从前有座山，山里有座庙，庙里有个老和尚在讲故事。");
+                String name = "/jrxml/samples/girl_head.jpg";
+                String file = Utils.getResource(name).getFile();
+                System.out.println("img1: " + file);
+                parameters.put("img1", file);
+//                parameters.put("img2", Utils.getResourceAsStream(name));
                 return JasperFillManager.fillReport(
-                        jasperReport, new HashMap(), new JREmptyDataSource());
+                        jasperReport, parameters, new JREmptyDataSource());
             }
         }.doWork();
     }

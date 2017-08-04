@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="elements" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="880976ab-05e0-424a-a32b-35b5149ec6a0">
+	<property name="ireport.callouts" value="##Thu Aug 03 14:09:42 CST 2017"/>
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="param1" class="java.lang.String"/>
+	<parameter name="param2" class="java.lang.String"/>
+	<parameter name="param3" class="java.lang.String"/>
+	<parameter name="img1" class="java.lang.String"/>
+	<parameter name="img2" class="java.io.InputStream"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="300" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="19" width="555" height="31" uuid="ee360ddc-6778-432c-bbf3-4b33aa1d322c"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="20" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Elements in a report]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="50" width="555" height="78" uuid="e51391bd-11ee-4263-87e3-fcf4be4fb811"/>
+				<textElement textAlignment="Justified" verticalAlignment="Top">
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[A report is composed by a set of bands which contain elements. Elements are presented in the iReport palette. They can be simple shapes like the rectangle and the line, or complex objects like a subreport or a crosstab. The most common ones are presented in this report.]]></text>
+			</staticText>
+			<line>
+				<reportElement x="73" y="147" width="482" height="1" uuid="6337df1c-e100-4f9f-b1ac-2f0fec73e9b6"/>
+			</line>
+			<staticText>
+				<reportElement x="0" y="128" width="73" height="32" uuid="75fd38cc-320f-4f81-a061-ffef99c2a1e0"/>
+				<textElement verticalAlignment="Middle">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Shapes]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="32" y="178" width="100" height="20" uuid="bda48a3b-e4c1-4431-972b-34ecc26fda34"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{param1}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="157" y="178" width="100" height="20" uuid="e065b828-a666-4b44-bdb8-34a07e7badcd"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{param2}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="288" y="178" width="117" height="47" uuid="83ca4c1e-7888-4dd6-8eb1-9582c27a5796"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{param3}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="32" y="240" width="87" height="50" uuid="97133685-3ec7-4295-95bd-d9ffbae25682"/>
+				<imageExpression><![CDATA[$P{img1}]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="171" y="240" width="100" height="50" uuid="de52bda8-9e31-436f-9411-b3d772316e55"/>
+				<imageExpression><![CDATA[$P{img2}]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>
