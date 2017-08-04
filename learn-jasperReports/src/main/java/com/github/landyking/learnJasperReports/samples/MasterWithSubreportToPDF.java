@@ -4,25 +4,28 @@ import com.github.landyking.learnJasperReports.JasperMaster;
 import com.github.landyking.learnJasperReports.Utils;
 import net.sf.jasperreports.engine.*;
 
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 
 /**
  * Description：
  * <ol>
- * <li>一个简单的模板。上面展示三句话，和两副图片。</li>
- * <li>传入一句字母，两句汉语给报表引擎</li>
- * <li>传入一个图片地址，一个二进制图片数据给报表引擎</li>
+ * <li>一个简单主模块，一个文字占位，一个图片占位，一个子报表占位</li>
+ * <li>子报表中包含一个文字占位，一个图片占位</li>
+ * <li>传入变量：文字，图片二进制数据，子报表名称，子报表的文字图片</li>
  * <li>生成pdf</li>
- * <li>检查确认生成成功，文本正常且没有乱码。两幅图片均正常显示</li>
+ * <li>检查确认生成成功，且没有乱码</li>
  * </ol>
  *
  * @author: Landy
- * @date: 2017/8/3 11:37
+ * @date: 2017/8/4 10:08
  * note:
  */
-public class SimpleParameterWithImageToPDF {
-    public static void main(String[] args) {
-        new JasperMaster("/jrxml/samples/simpleParameterWithImage.jrxml", "simple_report_img.pdf") {
+public class MasterWithSubreportToPDF {
+    public static void main(String[] args) throws IOException {
+        JasperMaster help = new JasperMaster("/jrxml/samples/masterWithSubreport.jrxml", "masterWithSubreport.pdf") {
 
             @Override
             public JasperPrint fillReport(JasperReport jasperReport) throws JRException {
@@ -38,6 +41,8 @@ public class SimpleParameterWithImageToPDF {
                 return JasperFillManager.fillReport(
                         jasperReport, parameters, new JREmptyDataSource());
             }
-        }.doWork();
+        };
+        help.doWork();
+        help.showOutputFile();
     }
 }

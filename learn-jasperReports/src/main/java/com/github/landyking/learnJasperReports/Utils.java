@@ -16,7 +16,7 @@ public class Utils {
     public static File getTargetDir() throws URISyntaxException {
         URL resource = Utils.class.getResource("/");
         File classDir = new File(resource.toURI());
-        File targetDir = new File(classDir, "..");
+        File targetDir = classDir.getParentFile();
         return targetDir;
     }
 

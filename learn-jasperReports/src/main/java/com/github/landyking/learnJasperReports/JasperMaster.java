@@ -2,12 +2,13 @@ package com.github.landyking.learnJasperReports;
 
 import net.sf.jasperreports.engine.*;
 
+import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.HashMap;
 
 /**
  * Description：TODO <br/>
@@ -20,10 +21,17 @@ public abstract class JasperMaster {
     public static final String JASPER_REPORTS = "jasperReports";
     private final String classResourcePath;
     private final String pdfFileName;
+    private String outputFilePath;
 
     public JasperMaster(String classResourcePath, String pdfFileName) {
         this.classResourcePath = classResourcePath;
         this.pdfFileName = pdfFileName;
+    }
+
+    public void showOutputFile() throws IOException {
+        if (Desktop.isDesktopSupported()) {
+            Desktop.getDesktop().open(new File(getOutputFilePath()));
+        }
     }
 
     public void doWork() {
@@ -41,10 +49,10 @@ public abstract class JasperMaster {
             System.out.println("read resource: " + resource.getFile());
             jasperReport = JasperCompileManager.compileReport(new FileInputStream(resource.getFile()));
             jasperPrint = fillReport(jasperReport);
-            String absolutePath = new File(jasperReportsDir, pdfFileName).getAbsolutePath();
+            outputFilePath = new File(jasperReportsDir, pdfFileName).getAbsolutePath();
             JasperExportManager.exportReportToPdfFile(
-                    jasperPrint, absolutePath);
-            System.out.println("output file: " + absolutePath);
+                    jasperPrint, outputFilePath);
+            System.out.println("output file: " + outputFilePath);
         } catch (JRException e) {
             e.printStackTrace();
         } catch (URISyntaxException e) {
@@ -52,6 +60,10 @@ public abstract class JasperMaster {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    public String getOutputFilePath() {
+        return outputFilePath;
     }
 
     public abstract JasperPrint fillReport(JasperReport jasperReport) throws JRException;
