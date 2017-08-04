@@ -12,7 +12,7 @@
 	<title>
 		<band height="70" splitType="Stretch">
 			<image>
-				<reportElement x="181" y="11" width="100" height="50" uuid="96a383b4-5aed-4c64-89ee-30fa97d5de73"/>
+				<reportElement x="151" y="11" width="100" height="50" uuid="96a383b4-5aed-4c64-89ee-30fa97d5de73"/>
 				<imageExpression><![CDATA[$P{testsub2}]]></imageExpression>
 			</image>
 			<textField>
@@ -23,7 +23,7 @@
 				<textFieldExpression><![CDATA[$P{testsub1}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="297" y="11" width="36" height="50" uuid="e764790f-bce8-4a49-b64c-b987dcd1abbb"/>
+				<reportElement x="278" y="11" width="55" height="50" uuid="e764790f-bce8-4a49-b64c-b987dcd1abbb"/>
 				<textElement>
 					<font fontName="宋体" size="18" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
 				</textElement>
