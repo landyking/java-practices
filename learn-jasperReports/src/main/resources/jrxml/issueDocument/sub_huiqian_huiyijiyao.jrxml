@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="sub_huiqian_huiyijiyao" pageWidth="230" pageHeight="76" whenNoDataType="AllSectionsNoDetail" columnWidth="230" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="f5a15ccd-f616-4be4-a959-d4a36b5ff5f5">
+	<property name="ireport.zoom" value="1.3310000000000004"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="sign1" class="java.lang.String">
+		<defaultValueExpression><![CDATA["hyjy.png"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="sign2" class="java.lang.String">
+		<defaultValueExpression><![CDATA[".png"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="sign3" class="java.lang.String">
+		<defaultValueExpression><![CDATA["sign.png"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="sign4" class="java.lang.String">
+		<defaultValueExpression><![CDATA["sign.png"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="sign5" class="java.lang.String">
+		<defaultValueExpression><![CDATA["sign.png"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="sign6" class="java.lang.String">
+		<defaultValueExpression><![CDATA["sign.png"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="sign7" class="java.lang.String">
+		<defaultValueExpression><![CDATA["sign.png"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="sign8" class="java.lang.String">
+		<defaultValueExpression><![CDATA["sign.png"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="sign9" class="java.lang.String">
+		<defaultValueExpression><![CDATA["sign.png"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="sign10" class="java.lang.String">
+		<defaultValueExpression><![CDATA["sign.png"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="sign11" class="java.lang.String">
+		<defaultValueExpression><![CDATA["sign.png"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="sign12" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="76" splitType="Stretch">
+			<image>
+				<reportElement mode="Opaque" x="15" y="2" width="44" height="22" uuid="a10b6690-7a7b-46a9-8ce9-15dfab06713b"/>
+				<imageExpression><![CDATA[$P{sign1}]]></imageExpression>
+			</image>
+			<image>
+				<reportElement mode="Opaque" x="66" y="2" width="44" height="22" uuid="37bb3730-7bb2-4022-896f-9d915ef9cc9f"/>
+				<imageExpression><![CDATA[$P{sign2}]]></imageExpression>
+			</image>
+			<image>
+				<reportElement mode="Opaque" x="118" y="2" width="44" height="22" uuid="4affc71c-0e37-4d08-b066-b687039122ff"/>
+				<imageExpression><![CDATA[$P{sign3}]]></imageExpression>
+			</image>
+			<image>
+				<reportElement mode="Opaque" x="170" y="2" width="44" height="22" uuid="e525c819-6dd8-4c54-8383-6d51337cf9dc"/>
+				<imageExpression><![CDATA[$P{sign4}]]></imageExpression>
+			</image>
+			<image>
+				<reportElement mode="Opaque" x="118" y="26" width="44" height="22" uuid="0fe7992d-822e-41aa-a8ab-454c2dbcb62e"/>
+				<imageExpression><![CDATA[$P{sign7}]]></imageExpression>
+			</image>
+			<image>
+				<reportElement mode="Opaque" x="15" y="26" width="44" height="22" uuid="3e78db0e-33c4-4cc6-97a1-aa6d1b5406ef"/>
+				<imageExpression><![CDATA[$P{sign5}]]></imageExpression>
+			</image>
+			<image>
+				<reportElement mode="Opaque" x="66" y="26" width="44" height="22" uuid="99cf472b-b6ed-44c4-82f7-0b9d6b587cf1"/>
+				<imageExpression><![CDATA[$P{sign6}]]></imageExpression>
+			</image>
+			<image>
+				<reportElement mode="Opaque" x="170" y="26" width="44" height="22" uuid="a875c606-5460-4329-90af-e523f0439eba"/>
+				<imageExpression><![CDATA[$P{sign8}]]></imageExpression>
+			</image>
+			<image>
+				<reportElement mode="Opaque" x="65" y="50" width="44" height="22" uuid="3465a48b-f04c-4be9-9153-6ee1af7d5a25"/>
+				<imageExpression><![CDATA[$P{sign10}]]></imageExpression>
+			</image>
+			<image>
+				<reportElement mode="Opaque" x="169" y="50" width="44" height="22" uuid="2b880589-3e2c-4fae-a241-649366ed1177"/>
+				<imageExpression><![CDATA[$P{sign12}]]></imageExpression>
+			</image>
+			<image>
+				<reportElement mode="Opaque" x="117" y="50" width="44" height="22" uuid="bf45530e-c75e-4859-9344-584490a9a04e"/>
+				<imageExpression><![CDATA[$P{sign11}]]></imageExpression>
+			</image>
+			<image>
+				<reportElement mode="Opaque" x="14" y="50" width="44" height="22" uuid="89303975-fcd3-4f63-bb5d-40009b330d0e"/>
+				<imageExpression><![CDATA[$P{sign9}]]></imageExpression>
+			</image>
+		</band>
+	</title>
+</jasperReport>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="sub_bangongshishenhe_1" pageWidth="230" pageHeight="132" whenNoDataType="AllSectionsNoDetail" columnWidth="230" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="b20a8a66-8769-4205-84aa-414f9af44fb6">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="txt1" class="java.lang.String">
+		<defaultValueExpression><![CDATA["我是默认办公室审核值1"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="sign1" class="java.lang.String">
+		<defaultValueExpression><![CDATA["bgssh.png"]]></defaultValueExpression>
+	</parameter>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="132" splitType="Stretch">
+			<image>
+				<reportElement mode="Opaque" x="176" y="108" width="44" height="22" uuid="7778ab67-0cb8-4960-8802-f2ac384c38ee"/>
+				<imageExpression><![CDATA[$P{sign1}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="3" y="1" width="219" height="108" uuid="4895510a-386c-44c1-9f22-63e38c85401c"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="宋体" size="12" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{txt1}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+</jasperReport>

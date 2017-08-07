@@ -68,4 +68,11 @@ public abstract class JasperMaster {
 
     public abstract JasperPrint fillReport(JasperReport jasperReport) throws JRException;
 
+    public String compileReport(String classResource) throws JRException {
+        String path = Utils.getResource(classResource).getPath();
+        System.out.println("will compile subreport path: " + path);
+        String subJasperFile = JasperCompileManager.compileReportToFile(path);
+        System.out.println("compiled subreport: " + subJasperFile);
+        return subJasperFile;
+    }
 }

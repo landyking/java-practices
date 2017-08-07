@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="sub_qianfa_1" pageWidth="230" pageHeight="76" whenNoDataType="AllSectionsNoDetail" columnWidth="230" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="f5a15ccd-f616-4be4-a959-d4a36b5ff5f5">
+	<property name="ireport.zoom" value="1.3310000000000004"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="txt1" class="java.lang.String">
+		<defaultValueExpression><![CDATA["我是一个默认值签发1"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="sign1" class="java.lang.String">
+		<defaultValueExpression><![CDATA["qf.png"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="txt2" class="java.lang.String">
+		<defaultValueExpression><![CDATA["我是一个默认值签发2"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="sign2" class="java.lang.String">
+		<defaultValueExpression><![CDATA["sign.png"]]></defaultValueExpression>
+	</parameter>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="76" splitType="Stretch">
+			<image>
+				<reportElement mode="Opaque" x="184" y="51" width="44" height="22" uuid="a10b6690-7a7b-46a9-8ce9-15dfab06713b"/>
+				<imageExpression><![CDATA[$P{sign2}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="1" y="0" width="106" height="48" uuid="6074b389-a87f-40e7-8ae3-10c4cfc3fe3a"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="宋体" size="12" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{txt1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="124" y="0" width="106" height="48" uuid="bb91457c-8e4a-4be0-bacc-455b212305ee"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="宋体" size="12" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{txt2}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement mode="Opaque" x="63" y="51" width="44" height="22" uuid="3c1af408-ff6a-480f-a0cf-3d05eb800c35"/>
+				<imageExpression><![CDATA[$P{sign1}]]></imageExpression>
+			</image>
+		</band>
+	</title>
+</jasperReport>

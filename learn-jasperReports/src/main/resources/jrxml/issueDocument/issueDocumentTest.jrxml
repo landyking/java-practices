@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="issueDocument" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="77bf8b60-215f-4aa2-9f81-2e42992552b6">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="192"/>
+	<parameter name="title" class="java.lang.String">
+		<defaultValueExpression><![CDATA["我是默认标题"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="copyTo" class="java.lang.String">
+		<defaultValueExpression><![CDATA["我是默认抄送值"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="sub_qianfa_name" class="java.lang.String">
+		<defaultValueExpression><![CDATA["sub_qianfa_2.jasper"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="sub_qianfa_params" class="java.util.Map" isForPrompting="false"/>
+	<parameter name="sub_huiqian_name" class="java.lang.String">
+		<defaultValueExpression><![CDATA["sub_huiqian_huiyijiyao.jasper"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="sub_huiqian_params" class="java.util.Map" isForPrompting="false"/>
+	<parameter name="sub_bangongshishenhe_name" class="java.lang.String">
+		<defaultValueExpression><![CDATA["sub_bangongshishenhe_1.jasper"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="sub_bangongshishenhe_params" class="java.util.Map" isForPrompting="false"/>
+	<parameter name="sub_nigaoren_name" class="java.lang.String">
+		<defaultValueExpression><![CDATA["sub_nigaoren_1.jasper"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="sub_nigaoren_params" class="java.util.Map" isForPrompting="false"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="842" splitType="Stretch">
+			<line>
+				<reportElement x="66" y="128" width="463" height="2" forecolor="#E60012" uuid="74d68526-6b6a-4e9a-900e-a691723d1d4d"/>
+			</line>
+			<line>
+				<reportElement x="66" y="223" width="463" height="2" forecolor="#E60012" uuid="dcc938c2-782e-4be9-aee9-1f427e5758e9"/>
+			</line>
+			<line>
+				<reportElement x="66" y="296" width="463" height="2" forecolor="#E60012" uuid="1b600110-b2bf-40f4-b3c8-38995e7fdc30"/>
+			</line>
+			<line>
+				<reportElement x="66" y="369" width="463" height="2" forecolor="#E60012" uuid="278d1307-2a0f-452f-95a0-77ad2b02a95a"/>
+			</line>
+			<line>
+				<reportElement x="66" y="529" width="463" height="2" forecolor="#E60012" uuid="53f0bcc2-bd7e-4760-9291-ab697a1b0045"/>
+			</line>
+			<line>
+				<reportElement x="66" y="600" width="463" height="2" forecolor="#E60012" uuid="58f06972-5a72-4d5e-bcee-d2b47a81b409"/>
+			</line>
+			<line>
+				<reportElement x="66" y="636" width="463" height="2" forecolor="#E60012" uuid="072f17c1-16a7-4f02-b05c-f62ae586c698"/>
+			</line>
+			<line>
+				<reportElement x="66" y="672" width="463" height="2" forecolor="#E60012" uuid="65789e6d-aaaa-4e3b-9b85-c59e705af3c0"/>
+			</line>
+			<line>
+				<reportElement x="66" y="708" width="463" height="2" forecolor="#E60012" uuid="01fc0b99-880d-40f0-a374-e4d14db71e43"/>
+			</line>
+			<line>
+				<reportElement x="66" y="744" width="463" height="2" forecolor="#E60012" uuid="1bb2ccc8-c673-4f77-866f-e4f5f0d7c2b0"/>
+			</line>
+			<staticText>
+				<reportElement x="134" y="94" width="20" height="26" forecolor="#E60012" uuid="304d1269-70c8-4c82-aa4b-abd34270eaf4"/>
+				<textElement textAlignment="Left">
+					<font fontName="宋体" size="22" isBold="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[冥]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="68" y="131" width="37" height="16" forecolor="#E60012" uuid="43023ddc-b513-4145-b519-79c0d5977f59"/>
+				<textElement>
+					<font fontName="宋体" size="12" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[签发：]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="158" y="94" width="20" height="26" forecolor="#E60012" uuid="4249bd68-ca16-42f4-ba11-3ebba37d1c5b"/>
+				<textElement textAlignment="Left">
+					<font fontName="宋体" size="22" isBold="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[王]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="183" y="94" width="20" height="26" forecolor="#E60012" uuid="b7b4b9e3-965b-44c5-aefe-9cedb5952fae"/>
+				<textElement textAlignment="Left">
+					<font fontName="宋体" size="22" isBold="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[星]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="207" y="94" width="20" height="26" forecolor="#E60012" uuid="46c85d4d-e03d-42eb-a353-8c6adabac1f8"/>
+				<textElement textAlignment="Left">
+					<font fontName="宋体" size="22" isBold="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[办]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="231" y="94" width="20" height="26" forecolor="#E60012" uuid="98a04e3f-8802-4ce2-8738-0b42b0145259"/>
+				<textElement textAlignment="Left">
+					<font fontName="宋体" size="22" isBold="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[事]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="255" y="94" width="20" height="26" forecolor="#E60012" uuid="16beda88-0f33-46f5-922d-a64148c0c656"/>
+				<textElement textAlignment="Left">
+					<font fontName="宋体" size="22" isBold="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[处]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="393" y="102" width="79" height="16" forecolor="#E60012" uuid="32004263-523b-4964-b888-9f2ad35a72a6"/>
+				<textElement>
+					<font fontName="宋体" size="12" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[（发文稿签）]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="301" y="131" width="36" height="16" forecolor="#E60012" uuid="ab5cfa84-2d75-4302-929b-bba8eda84835"/>
+				<textElement>
+					<font fontName="宋体" size="12" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[会签：]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="68" y="253" width="79" height="16" forecolor="#E60012" uuid="c4417735-c71c-4548-8e89-ed293889a34e"/>
+				<textElement>
+					<font fontName="宋体" size="12" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[文件标题：]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="68" y="325" width="79" height="16" forecolor="#E60012" uuid="71f41f46-b318-437c-91e7-49927bc9464d"/>
+				<textElement>
+					<font fontName="宋体" size="12" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[主送机关：]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="68" y="381" width="79" height="16" forecolor="#E60012" uuid="c2ba567b-6daf-43d7-b7bf-48974d6263ae"/>
+				<textElement>
+					<font fontName="宋体" size="12" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[办公室审核：]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="302" y="381" width="65" height="16" forecolor="#E60012" uuid="9cedb806-29a7-4c30-abe4-1aaccbd8a582"/>
+				<textElement>
+					<font fontName="宋体" size="12" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[主办单位、]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="367" y="381" width="61" height="16" forecolor="#E60012" uuid="431f144c-2176-4ebe-ae5b-5140b16a24ba"/>
+				<textElement>
+					<font fontName="宋体" size="12" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[拟稿人：]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="68" y="575" width="61" height="16" forecolor="#E60012" uuid="f7c99055-66d2-4d85-9596-4cee3c9f8bf5"/>
+				<textElement>
+					<font fontName="宋体" size="12" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[编号：]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="171" y="575" width="25" height="16" forecolor="#E60012" uuid="5d768b04-b1e1-4b78-bd86-51a4f6af5ff8"/>
+				<textElement>
+					<font fontName="宋体" size="12" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[（]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="244" y="575" width="12" height="16" forecolor="#E60012" uuid="188e146a-20be-4a59-a5ba-1f0731d65f5c"/>
+				<textElement>
+					<font fontName="宋体" size="12" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[）]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="254" y="575" width="25" height="16" forecolor="#E60012" uuid="3a158cd2-676b-45f1-89e0-1da2e5f24f21"/>
+				<textElement>
+					<font fontName="宋体" size="12" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[号]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="349" y="575" width="25" height="16" forecolor="#E60012" uuid="70d0aa11-386f-49d5-ae82-54403c6ad843"/>
+				<textElement>
+					<font fontName="宋体" size="12" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[年]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="395" y="575" width="25" height="16" forecolor="#E60012" uuid="a2d25dc4-869b-4b6f-85f8-2f1fb3b60485"/>
+				<textElement>
+					<font fontName="宋体" size="12" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[月]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="449" y="575" width="47" height="16" forecolor="#E60012" uuid="4bb02a2c-f716-4c9f-8eea-7cd1401d4456"/>
+				<textElement>
+					<font fontName="宋体" size="12" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[日印发]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="68" y="611" width="60" height="16" forecolor="#E60012" uuid="680f927a-cdee-4f2f-becc-558a09ba1308"/>
+				<textElement>
+					<font fontName="宋体" size="12" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[主  办：]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="305" y="611" width="60" height="16" forecolor="#E60012" uuid="2a9e13b8-b5d2-41e0-b708-cbfc9aa53b1a"/>
+				<textElement>
+					<font fontName="宋体" size="12" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[督  办：]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="68" y="647" width="60" height="16" forecolor="#E60012" uuid="b3197985-7a13-480a-8e0c-b1e19008eebf"/>
+				<textElement>
+					<font fontName="宋体" size="12" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[抄  送：]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="68" y="682" width="60" height="16" forecolor="#E60012" uuid="a0d17760-dfe1-4e38-a881-749acc154f10"/>
+				<textElement>
+					<font fontName="宋体" size="12" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[主题词：]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="68" y="719" width="60" height="16" forecolor="#E60012" uuid="27f0ae89-254c-4c15-ac41-a0de07faa790"/>
+				<textElement>
+					<font fontName="宋体" size="12" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[说  明：]]></text>
+			</staticText>
+			<line>
+				<reportElement x="297" y="130" width="1" height="93" forecolor="#E60012" uuid="dfab8ec7-d28f-4f27-b55d-18585b8928bf"/>
+			</line>
+			<line>
+				<reportElement x="297" y="371" width="1" height="265" forecolor="#E60012" uuid="f7f5e824-9145-400a-bf0c-b706fe2e1858"/>
+			</line>
+			<textField>
+				<reportElement x="130" y="239" width="379" height="42" uuid="c769effa-de52-45e0-aa59-d068c8773615"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="宋体" size="12" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{title}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="130" y="312" width="379" height="42" uuid="977210a0-836a-4d7d-96d7-24f5f0fd44d2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="宋体" size="12" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+			</textField>
+			<textField>
+				<reportElement x="115" y="647" width="397" height="18" uuid="a33fc60b-8571-421d-a838-3147201e0033"/>
+				<textElement>
+					<font fontName="宋体" size="12" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{copyTo}]]></textFieldExpression>
+			</textField>
+			<subreport>
+				<reportElement x="67" y="147" width="230" height="76" uuid="14d31ef7-a582-4661-aee0-33be6e9b91aa"/>
+				<parametersMapExpression><![CDATA[$P{sub_qianfa_params}]]></parametersMapExpression>
+				<subreportExpression><![CDATA[$P{sub_qianfa_name}]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement x="300" y="148" width="230" height="76" uuid="a3d28a34-e9ba-4c0b-9dc5-a3d51ce18a8b"/>
+				<parametersMapExpression><![CDATA[$P{sub_huiqian_params}]]></parametersMapExpression>
+				<subreportExpression><![CDATA[$P{sub_huiqian_name}]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement x="67" y="398" width="230" height="132" uuid="f7ad8509-a49b-4b8f-9e8d-b3331ee38f1a"/>
+				<parametersMapExpression><![CDATA[$P{sub_bangongshishenhe_params}]]></parametersMapExpression>
+				<subreportExpression><![CDATA[$P{sub_bangongshishenhe_name}]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement x="299" y="398" width="230" height="132" uuid="cef990a8-a917-4861-8501-27fd6adf219d"/>
+				<parametersMapExpression><![CDATA[$P{sub_nigaoren_params}]]></parametersMapExpression>
+				<subreportExpression><![CDATA[$P{sub_nigaoren_name}]]></subreportExpression>
+			</subreport>
+		</band>
+	</title>
+</jasperReport>
