@@ -11,6 +11,7 @@
         <module>learn-activiti</module>
         <module>learn-json</module>
         <module>learn-jasperReports</module>
+        <module>learn-spring-plugin</module>
     </modules>
     <packaging>pom</packaging>
 
