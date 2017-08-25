@@ -13,6 +13,7 @@
         <module>learn-jasperReports</module>
         <module>learn-spring-plugin</module>
         <module>learn-jeesite</module>
+        <module>learn-yisaitong</module>
     </modules>
     <packaging>pom</packaging>
 

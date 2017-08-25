@@ -133,3 +133,12 @@ https://github.com/landyking/jeesite.git
 	1.	默认选中第一个顶部菜单，通过`http://localhost:8181/jeesite/a/sys/menu/tree?parentId=`加载左侧菜单。
 	1.	默认选中第一个左侧菜单，加载对应页面。
 	1.	使用了jquery的插件为jquery.jerichotab.js。
+
+###用户和权限系统
+####用户
+####机构
+####区域
+####角色
+####菜单
+
+###内置组件
