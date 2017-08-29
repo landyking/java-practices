@@ -14,6 +14,7 @@
         <module>learn-spring-plugin</module>
         <module>learn-jeesite</module>
         <module>learn-yisaitong</module>
+        <module>learn-metainfo</module>
     </modules>
     <packaging>pom</packaging>
 

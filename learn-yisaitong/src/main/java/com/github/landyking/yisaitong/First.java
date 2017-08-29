@@ -17,10 +17,10 @@ public class First {
 
     public static void main(String[] args) throws IOException, InvalidFormatException {
         Workbook workbook = WorkbookFactory.create(new File("E:\\XDJA\\codes\\workspace\\daydayup\\learn-yisaitong\\src\\main\\resources\\test.xls"));
-        Sheet sheet = workbook.getSheetAt(0);
+        /*Sheet sheet = workbook.getSheetAt(0);
         Row row = sheet.getRow(0);
         Cell cell = row.getCell(0);
-        System.out.println(cell.getStringCellValue());
+        System.out.println(cell.getStringCellValue());*/
 
     }
 }
