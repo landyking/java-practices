@@ -16,6 +16,7 @@
         <module>learn-yisaitong</module>
         <module>learn-metainfo</module>
         <module>learn-shiro</module>
+        <module>learn-jna</module>
     </modules>
     <packaging>pom</packaging>
 
