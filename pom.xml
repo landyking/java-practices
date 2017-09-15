@@ -17,6 +17,7 @@
         <module>learn-metainfo</module>
         <module>learn-shiro</module>
         <module>learn-jna</module>
+        <module>learn-concurrency</module>
     </modules>
     <packaging>pom</packaging>
 
