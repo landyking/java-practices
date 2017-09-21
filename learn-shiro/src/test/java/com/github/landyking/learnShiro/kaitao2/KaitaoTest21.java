@@ -1,14 +1,25 @@
 package com.github.landyking.learnShiro.kaitao2;
 
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authc.*;
+import org.apache.shiro.authc.pam.AtLeastOneSuccessfulStrategy;
+import org.apache.shiro.authc.pam.ModularRealmAuthenticator;
+import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.ModularRealmAuthorizer;
+import org.apache.shiro.authz.permission.WildcardPermissionResolver;
 import org.apache.shiro.config.IniSecurityManagerFactory;
+import org.apache.shiro.mgt.DefaultSecurityManager;
 import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.realm.AuthorizingRealm;
+import org.apache.shiro.realm.Realm;
+import org.apache.shiro.realm.jdbc.JdbcRealm;
+import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.Factory;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.Arrays;
 
 /**
  * Description：TODO <br/>
@@ -43,4 +54,41 @@ public class KaitaoTest21 {
         subject.logout();
     }
 
+    @Test
+    public void testlalal() throws Exception {
+        DefaultSecurityManager securityManager = new DefaultSecurityManager();
+//设置authenticator
+        ModularRealmAuthenticator authenticator = new ModularRealmAuthenticator();
+        authenticator.setAuthenticationStrategy(new AtLeastOneSuccessfulStrategy());
+        securityManager.setAuthenticator(authenticator);
+
+//设置authorizer
+        ModularRealmAuthorizer authorizer = new ModularRealmAuthorizer();
+        authorizer.setPermissionResolver(new WildcardPermissionResolver());
+        securityManager.setAuthorizer(authorizer);
+
+
+
+        Realm jdbcRealm = new AuthorizingRealm() {
+            @Override
+            protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
+                return null;
+            }
+
+            @Override
+            protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
+                return new SimpleAccount("zhang","123",getName());
+            }
+        };
+        securityManager.setRealms(Arrays.asList((Realm) jdbcRealm));
+
+//将SecurityManager设置到SecurityUtils 方便全局使用
+        SecurityUtils.setSecurityManager(securityManager);
+
+        Subject subject = SecurityUtils.getSubject();
+        UsernamePasswordToken token = new UsernamePasswordToken("zhang", "123");
+        subject.login(token);
+        Assert.assertTrue(subject.isAuthenticated());
+
+    }
 }
