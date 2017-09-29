@@ -18,6 +18,7 @@
         <module>learn-shiro</module>
         <module>learn-jna</module>
         <module>learn-concurrency</module>
+        <module>learn-tomcat</module>
     </modules>
     <packaging>pom</packaging>
 
