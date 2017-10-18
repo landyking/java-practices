@@ -29,7 +29,7 @@ import java.util.*;
 public class ActivityTest {
     @BeforeClass
     public static void beforeAll() {
-        PropertyConfigurator.configure(BasicUseEngine.class.getResourceAsStream("/log4j-2.properties"));
+        PropertyConfigurator.configure(BasicUseEngine.class.getResourceAsStream("/log4j-1.properties"));
     }
 
     @Rule

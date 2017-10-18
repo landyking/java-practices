@@ -22,6 +22,10 @@ public class DeployProcess {
         ProcessEngine processEngine = cfg.buildProcessEngine();
         String pName = processEngine.getName();
         String ver = ProcessEngine.VERSION;
+        System.out.println("#############################################");
+        System.out.println("#############################################");
+        System.out.println("#############################################");
+        System.out.println("#############################################");
         System.out.println("ProcessEngine [" + pName + "] Version: [" + ver + "]");
 
         RepositoryService repositoryService = processEngine.getRepositoryService();
