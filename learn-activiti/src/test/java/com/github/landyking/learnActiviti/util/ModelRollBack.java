@@ -45,8 +45,8 @@ public class ModelRollBack {
         try {
             Map<String, Object> variables;
             // 取得当前任务.当前任务节点
-            HistoricTaskInstance currTask = historyService
-                    .createHistoricTaskInstanceQuery().taskId(taskId)
+            Task currTask = taskService
+                    .createTaskQuery().taskId(taskId)
                     .singleResult();
             // 取得流程实例，流程实例
             ProcessInstance instance = runtimeService

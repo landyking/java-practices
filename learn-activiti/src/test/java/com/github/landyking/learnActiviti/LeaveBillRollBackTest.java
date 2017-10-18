@@ -6,6 +6,7 @@ import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.impl.cfg.StandaloneProcessEngineConfiguration;
+import org.activiti.engine.impl.history.HistoryLevel;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
@@ -29,6 +30,7 @@ public class LeaveBillRollBackTest {
                 .setJdbcDriver("org.h2.Driver")
                 .setJdbcUsername("sa")
                 .setJdbcPassword("")
+//                .setHistoryLevel(HistoryLevel.FULL)
                 .setDatabaseSchemaUpdate(ProcessEngineConfiguration.DB_SCHEMA_UPDATE_TRUE);
         ProcessEngine processEngine = configuration.buildProcessEngine();
         RepositoryService repositoryService = processEngine.getRepositoryService();
