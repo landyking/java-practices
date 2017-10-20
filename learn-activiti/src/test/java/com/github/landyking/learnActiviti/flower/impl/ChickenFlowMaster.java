@@ -4,7 +4,6 @@ import com.github.landyking.learnActiviti.flower.FlowMaster;
 import com.github.landyking.learnActiviti.flower.Task;
 import com.github.landyking.learnActiviti.flower.Track;
 import com.google.common.base.Function;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.hash.Hashing;
 import com.google.common.io.ByteStreams;
@@ -13,6 +12,7 @@ import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -82,6 +82,7 @@ public class ChickenFlowMaster implements FlowMaster<Chicken> {
     @Override
     public String startFlow(String user, Map<String, Object> props) {
         String businessId = doBusinessWork(user, props);
+        engine.getIdentityService().setAuthenticatedUserId(user);
         ProcessInstance instance = engine.getRuntimeService().startProcessInstanceByKey("leaveBill", businessId);
         return instance.getProcessInstanceId();
     }
@@ -92,7 +93,11 @@ public class ChickenFlowMaster implements FlowMaster<Chicken> {
 
     @Override
     public void processTask(String user, String taskId, Map<String, Object> props) {
-
+        org.activiti.engine.task.Task task = engine.getTaskService().createTaskQuery().taskId(taskId).singleResult();
+        if (!StringUtils.hasText(task.getAssignee())) {
+            engine.getTaskService().claim(taskId, user);
+        }
+        engine.getTaskService().complete(taskId);
     }
 
     @Override

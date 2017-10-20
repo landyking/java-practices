@@ -34,9 +34,10 @@ public class ChickenFlowMasterTest {
         System.out.println("#################");
         master.init();
         String flowId = master.startFlow("hello", null);
-        int world = master.getTaskCount("world");
+        int world = master.getTaskCount("user");
+        System.out.println("user task count: "+world);
         if (world > 0) {
-            Task task = master.getTaskList("world").get(0);
+            Task task = master.getTaskList("user",0,100).get(0);
             master.processTask("world", task.getId(), null);
         }
     }
