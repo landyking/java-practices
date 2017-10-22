@@ -107,6 +107,8 @@ public class ChickenFlowMaster implements FlowMaster<Chicken> {
 
     @Override
     public Chicken getDetail(String user, String flowId) {
+        ProcessInstance instance = engine.getRuntimeService().createProcessInstanceQuery().processInstanceId(flowId).singleResult();
+        String businessKey = instance.getBusinessKey();
         return null;
     }
 
