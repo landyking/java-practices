@@ -30,10 +30,13 @@ public interface FlowMaster<T> {
 
     List<Track> getTrackList(String user, String flowId);
 
-    int getTaskCount(String user);
+    long getTaskCount(String user);
 
     List<Task> getTaskList(String user, int first, int limit);
 
-    void stopFlow(String user);
+    void stopFlow(String user, String flowId);
 
+    void stopTask(String user, String taskId);
+
+    long getUnfinishProcessCount();
 }
