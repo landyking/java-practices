@@ -35,7 +35,7 @@ import static org.junit.Assert.*;
 public class ChickenFlowMasterTest {
     @BeforeClass
     public static void beforeAll() {
-        PropertyConfigurator.configure(BasicUseEngine.class.getResourceAsStream("/log4j-2.properties"));
+        PropertyConfigurator.configure(BasicUseEngine.class.getResourceAsStream("/log4j-1.properties"));
     }
 
     @Resource
@@ -140,12 +140,12 @@ public class ChickenFlowMasterTest {
 
     @Test
     public void stopFlow() throws Exception {
-        master.stopFlow(null, "0983fcb4300143cf8e3eb53936b10c14");
+        master.stopFlow(null, "f20da57c99a6413e85067c1b5e939cc2");
     }
 
     @Test
     public void deleteProcessInstance() throws Exception {
-        ((ChickenFlowMaster) master).deleteProcessInstance("2501");
+        ((ChickenFlowMaster) master).deleteProcessInstance("10001");
     }
 
     @Test

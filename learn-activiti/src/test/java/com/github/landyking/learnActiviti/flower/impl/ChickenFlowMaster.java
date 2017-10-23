@@ -10,7 +10,6 @@ import com.google.common.hash.Hashing;
 import com.google.common.io.ByteStreams;
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.identity.User;
-import org.activiti.engine.impl.ProcessEngineImpl;
 import org.activiti.engine.impl.RepositoryServiceImpl;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
 import org.activiti.engine.impl.persistence.entity.TaskEntity;
@@ -24,6 +23,9 @@ import org.activiti.engine.task.TaskQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallback;
+import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
@@ -45,6 +47,15 @@ public class ChickenFlowMaster implements FlowMaster<Chicken> {
     private Logger logger = LoggerFactory.getLogger(ChickenFlowMaster.class);
     private ProcessEngine engine;
     private JdbcTemplate jdbcTemplate;
+    private TransactionTemplate transactionTemplate;
+
+    public TransactionTemplate getTransactionTemplate() {
+        return transactionTemplate;
+    }
+
+    public void setTransactionTemplate(TransactionTemplate transactionTemplate) {
+        this.transactionTemplate = transactionTemplate;
+    }
 
     public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -99,14 +110,20 @@ public class ChickenFlowMaster implements FlowMaster<Chicken> {
     }
 
     @Override
-    public String startFlow(String user, Map<String, Object> props) {
-        String businessId = doBusinessWork(user, props);
-        engine.getIdentityService().setAuthenticatedUserId(user);
-        ProcessInstance instance = engine.getRuntimeService().startProcessInstanceByKey(LEAVE_BILL, businessId, props);
-        String processInstanceId = instance.getProcessInstanceId();
-        int update = jdbcTemplate.update("update t_data set processInstanceId=? where id=?", processInstanceId, businessId);
-        Assert.isTrue(update == 1);
-        return processInstanceId;
+    public String startFlow(final String user, final Map<String, Object> props) {
+        return transactionTemplate.execute(new TransactionCallback<String>() {
+            @Override
+            public String doInTransaction(TransactionStatus status) {
+                String businessId = doBusinessWork(user, props);
+                engine.getIdentityService().setAuthenticatedUserId(user);
+                ProcessInstance instance = engine.getRuntimeService().startProcessInstanceByKey(LEAVE_BILL, businessId, props);
+                String processInstanceId = instance.getProcessInstanceId();
+                int update = jdbcTemplate.update("update t_data set processInstanceId=? where id=?", processInstanceId, businessId);
+                Assert.isTrue(update == 1);
+                return processInstanceId;
+            }
+        });
+
     }
 
     private String doBusinessWork(String user, Map<String, Object> props) {
@@ -230,10 +247,17 @@ public class ChickenFlowMaster implements FlowMaster<Chicken> {
 
     @Override
     public void stopFlow(String user, String flowId) {
-        String processInstanceId = jdbcTemplate.queryForObject("select processInstanceId from t_data where id=?", String.class, flowId);
+        String processInstanceId = null;
+        List<String> rstList = jdbcTemplate.queryForList("select processInstanceId from t_data where id=?", String.class, flowId);
+        if (!rstList.isEmpty()) {
+            processInstanceId = rstList.get(0);
+        }
+        if (!StringUtils.hasText(processInstanceId)) {
+            throw new IllegalArgumentException("Can't found flowId: " + flowId);
+        }
         deleteProcessInstance(processInstanceId);
         int update = jdbcTemplate.update("update t_data set status=?,endFlag=? where id=? and endFlag=? and status=?",
-                FlowConstans.end_true, FlowConstans.status_stoped, flowId, FlowConstans.end_false, FlowConstans.status_processing);
+                FlowConstans.status_stoped, FlowConstans.end_true, flowId, FlowConstans.end_false, FlowConstans.status_processing);
         Assert.isTrue(update == 1);
     }
 
