@@ -19,6 +19,7 @@
         <module>learn-jna</module>
         <module>learn-concurrency</module>
         <module>learn-tomcat</module>
+        <module>learn-transaction</module>
     </modules>
     <packaging>pom</packaging>
 
