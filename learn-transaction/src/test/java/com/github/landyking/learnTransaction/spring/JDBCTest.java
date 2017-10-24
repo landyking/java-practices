@@ -2,6 +2,7 @@ package com.github.landyking.learnTransaction.spring;
 
 import com.google.common.base.Throwables;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -40,8 +41,8 @@ public class JDBCTest {
     @Resource
     private PlatformTransactionManager transactionManager;
 
-    @Test
-    public void test1() throws Exception {
+    @Before
+    public void before() throws Exception {
         initTables();
         showAllData();
     }
@@ -101,8 +102,6 @@ public class JDBCTest {
      */
     @Test
     public void testIgnoreTransaction() throws Exception {
-        initTables();
-        showAllData();
         Connection connection = dataSource.getConnection();
         int count = connection.createStatement().executeUpdate("update t_data set count=222 where id='11111'");
         logger.info("将count修改为222，执行影响行数:" + count);
@@ -118,8 +117,6 @@ public class JDBCTest {
      */
     @Test
     public void testSelfTransaction() throws Exception {
-        initTables();
-        showAllData();
         Connection connection = dataSource.getConnection();
         boolean oldAutoCommit = connection.getAutoCommit();
         logger.info("记录原始的事务自动提交设置:" + oldAutoCommit);
@@ -156,8 +153,6 @@ public class JDBCTest {
      */
     @Test
     public void testSelfTransactionRollbackSuccess() throws Exception {
-        initTables();
-        showAllData();
         Connection connection = dataSource.getConnection();
         boolean oldAutoCommit = connection.getAutoCommit();
         logger.info("记录原始的事务自动提交设置:" + oldAutoCommit);
@@ -193,8 +188,6 @@ public class JDBCTest {
      */
     @Test
     public void testManagerTransactionRollbackFailure() throws Exception {
-        initTables();
-        showAllData();
         try {
             new TransactionTemplate(transactionManager).execute(new TransactionCallback<Object>() {
                 @Override
@@ -239,8 +232,7 @@ public class JDBCTest {
      */
     @Test
     public void testManagerTransactionRollbackSuccess() throws Exception {
-        initTables();
-        showAllData();
+
         try {
             new TransactionTemplate(transactionManager).execute(new TransactionCallback<Object>() {
                 @Override
@@ -275,8 +267,6 @@ public class JDBCTest {
      */
     @Test
     public void testManagerTransactionRollbackSuccess2() throws Exception {
-        initTables();
-        showAllData();
         try {
             new TransactionTemplate(transactionManager).execute(new TransactionCallback<Object>() {
                 @Override
