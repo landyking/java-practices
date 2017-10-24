@@ -34,9 +34,10 @@ public interface FlowMaster<T> {
 
     List<Task> getTaskList(String user, int first, int limit);
 
+    List<Tuple<Task, T>> getTaskWithBusinessDataList(String user, int first, int limit);
+
     void stopFlow(String user, String flowId);
 
-    void stopTask(String user, String taskId);
 
     long getUnfinishProcessCount();
 }

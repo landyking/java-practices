@@ -18,7 +18,7 @@
     <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
         <property name="dataSource" ref="dataSource"/>
     </bean>
-    <bean id="master" class="com.github.landyking.learnActiviti.flower.impl.ChickenFlowMaster">
+    <bean id="master" class="com.github.landyking.learnActiviti.flower.impl.TestDataFlowMaster">
         <property name="jdbcTemplate" ref="jdbcTemplate"/>
         <property name="engine" ref="processEngine"/>
         <property name="transactionTemplate" ref="transactionTemplate"/>
@@ -30,6 +30,11 @@
         <property name="jobExecutorActivate" value="false"/>
         <property name="historyLevel" value="NONE"/>
         <property name="activityFontName" value="微软雅黑"/>
+        <!--<property name="eventListeners">
+            <list>
+                <ref bean="flowerEventListener"/>
+            </list>
+        </property>-->
     </bean>
 
     <bean id="processEngine" class="org.activiti.spring.ProcessEngineFactoryBean">
@@ -42,4 +47,6 @@
     <bean id="historyService" factory-bean="processEngine" factory-method="getHistoryService"/>
     <bean id="managementService" factory-bean="processEngine" factory-method="getManagementService"/>
     <bean id="flowerTaskListener" class="com.github.landyking.learnActiviti.flower.FlowerTaskListener"/>
+    <bean id="flowerExecutionListener" class="com.github.landyking.learnActiviti.flower.FlowerExecutionListener"/>
+    <bean id="flowerEventListener" class="com.github.landyking.learnActiviti.flower.FlowerEventListener"/>
 </beans>

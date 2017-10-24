@@ -1,21 +1,15 @@
 package com.github.landyking.learnActiviti.flower.impl;
 
-import com.github.landyking.learnActiviti.flower.FlowConstans;
-import com.github.landyking.learnActiviti.flower.FlowMaster;
-import com.github.landyking.learnActiviti.flower.Task;
-import com.github.landyking.learnActiviti.flower.Track;
+import com.github.landyking.learnActiviti.flower.*;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import com.google.common.hash.Hashing;
 import com.google.common.io.ByteStreams;
 import org.activiti.engine.ProcessEngine;
+import org.activiti.engine.delegate.DelegateTask;
 import org.activiti.engine.identity.User;
-import org.activiti.engine.impl.RepositoryServiceImpl;
-import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
-import org.activiti.engine.impl.persistence.entity.TaskEntity;
-import org.activiti.engine.impl.pvm.PvmTransition;
-import org.activiti.engine.impl.pvm.process.ActivityImpl;
-import org.activiti.engine.impl.pvm.process.ProcessDefinitionImpl;
+import org.activiti.engine.impl.identity.Authentication;
+import org.activiti.engine.impl.persistence.entity.ExecutionEntity;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.IdentityLink;
@@ -41,10 +35,10 @@ import java.util.*;
  * @date: 2017/10/20 16:19
  * note:
  */
-public class ChickenFlowMaster implements FlowMaster<Chicken> {
+public class TestDataFlowMaster implements FlowMaster<TestData>, FlowerCallback {
     public static final String LEAVE_BILL = "leaveBill";
     public static final String LEAVE_BILL_CANDIDATE_BPMN20_XML = "leaveBillCandidate.bpmn20.xml";
-    private Logger logger = LoggerFactory.getLogger(ChickenFlowMaster.class);
+    private Logger logger = LoggerFactory.getLogger(TestDataFlowMaster.class);
     private ProcessEngine engine;
     private JdbcTemplate jdbcTemplate;
     private TransactionTemplate transactionTemplate;
@@ -116,6 +110,7 @@ public class ChickenFlowMaster implements FlowMaster<Chicken> {
             public String doInTransaction(TransactionStatus status) {
                 String businessId = doBusinessWork(user, props);
                 engine.getIdentityService().setAuthenticatedUserId(user);
+                props.put("flowId", businessId);
                 ProcessInstance instance = engine.getRuntimeService().startProcessInstanceByKey(LEAVE_BILL, businessId, props);
                 String processInstanceId = instance.getProcessInstanceId();
                 int update = jdbcTemplate.update("update t_data set processInstanceId=? where id=?", processInstanceId, businessId);
@@ -132,9 +127,9 @@ public class ChickenFlowMaster implements FlowMaster<Chicken> {
 
         Assert.notNull(count, "count can't empty");
         Assert.hasText(name, "name can't empty");
-        String id = UUID.randomUUID().toString().replaceAll("-", "");
-        int update = jdbcTemplate.update("insert into t_data (id,count,name,status,endFlag) values(?,?,?,?,?)"
-                , id, count, name, FlowConstans.status_processing, FlowConstans.end_false);
+        String id = Ids.newID();
+        int update = jdbcTemplate.update("insert into t_data (id,count,name,status,endFlag,startTime) values(?,?,?,?,?,?)"
+                , id, count, name, FlowConstans.status_processing, FlowConstans.end_false, new Date());
         Assert.isTrue(update == 1);
         return id;
     }
@@ -162,7 +157,7 @@ public class ChickenFlowMaster implements FlowMaster<Chicken> {
     }
 
     @Override
-    public Chicken getDetail(String user, String flowId) {
+    public TestData getDetail(String user, String flowId) {
         ProcessInstance instance = engine.getRuntimeService().createProcessInstanceQuery().processInstanceId(flowId).singleResult();
         String businessKey = instance.getBusinessKey();
         return null;
@@ -184,7 +179,7 @@ public class ChickenFlowMaster implements FlowMaster<Chicken> {
     }
 
     @Override
-    public List<Task> getTaskList(String user, int first, int limit) {
+    public List<Task> getTaskList(final String user, int first, int limit) {
         TaskQuery taskQuery = engine.getTaskService().createTaskQuery().processDefinitionKey(LEAVE_BILL);
         if (StringUtils.hasText(user)) {
             taskQuery = taskQuery.taskCandidateOrAssigned(user);
@@ -202,19 +197,53 @@ public class ChickenFlowMaster implements FlowMaster<Chicken> {
                 if (processInstance != null) {
                     task.setFlowId(processInstance.getBusinessKey());
                 }
-                String user = input.getAssignee();
-                if (!StringUtils.hasText(user)) {
-                    user = input.getOwner();
-                }
-                task.setUser(user);
-                if (!StringUtils.hasText(user)) {
-                    task.setCandidate(getTaskCandidate(input.getId()));
+                if (StringUtils.hasText(user)) {
+                    //通过user查询，直接设置该user
+                    task.setUser(user);
+                } else {
+                    //查询所有，需要提取对应的处理人
+                    String tmpUser = input.getAssignee();
+                    if (!StringUtils.hasText(tmpUser)) {
+                        tmpUser = input.getOwner();
+                    }
+                    task.setUser(tmpUser);
+                    if (!StringUtils.hasText(tmpUser)) {
+                        task.setCandidate(getTaskCandidate(input.getId()));
+                    }
                 }
                 return task;
             }
         });
         rst.size();
         return rst;
+    }
+
+    @Override
+    public List<Tuple<Task, TestData>> getTaskWithBusinessDataList(String user, int first, int limit) {
+        List<Tuple<Task, TestData>> rst = Lists.newArrayList();
+        while (true) {
+            rst.clear();
+            List<Task> taskList = getTaskList(user, first, limit);
+            for (Task one : taskList) {
+                TestData detail = getBusinessData(one.getFlowId());
+                if (detail == null) {
+                    //自动清理不存在的流程数据
+                    engine.getRuntimeService().deleteProcessInstance(one.getProcessInstanceId(), "auto clean");
+                    //重新加载数据
+                    continue;
+                } else {
+                    rst.add(Tuple.newInstance(one, detail));
+                }
+            }
+            break;
+        }
+        return rst;
+    }
+
+    private TestData getBusinessData(String flowId) {
+        TestData testData = new TestData();
+        Assert.notNull(null);
+        return testData;
     }
 
     private Set<String> getTaskCandidate(String taskId) {
@@ -255,83 +284,116 @@ public class ChickenFlowMaster implements FlowMaster<Chicken> {
         if (!StringUtils.hasText(processInstanceId)) {
             throw new IllegalArgumentException("Can't found flowId: " + flowId);
         }
-        deleteProcessInstance(processInstanceId);
-        int update = jdbcTemplate.update("update t_data set status=?,endFlag=? where id=? and endFlag=? and status=?",
-                FlowConstans.status_stoped, FlowConstans.end_true, flowId, FlowConstans.end_false, FlowConstans.status_processing);
-        Assert.isTrue(update == 1);
+        if (engine.getRuntimeService().createProcessInstanceQuery().processInstanceId(processInstanceId).count() == 1) {
+            //如果流程数据存在，则删除流程数据，自动触发业务数据状态更新。
+            deleteProcessInstance(user, processInstanceId);
+        } else {
+            //如果流程数据不存在，直接更新业务数据状态。
+            updateBusinessDataStopAndAddTrack(FlowConstans.status_stoped, flowId);
+        }
+
     }
 
-    protected void deleteProcessInstance(String processInstanceId) {
+    private void updateBusinessDataStopAndAddTrack(int status, String processBusinessKey) {
+        Date now = new Date();
+        int update = jdbcTemplate.update("update t_data set status=?,endFlag=?,endTime=? where id=? and endFlag=? and status=?",
+                status, FlowConstans.end_true, now, processBusinessKey, FlowConstans.end_false, FlowConstans.status_processing);
+        String operateDesc = "";
+        if (status == FlowConstans.status_stoped) {
+            operateDesc = "中止";
+        } else if (status == FlowConstans.status_success) {
+            operateDesc = "结束";
+        }
+        Assert.isTrue(update == 1, operateDesc + "流程" + processBusinessKey + "失败");
+        addTrack(processBusinessKey, FlowConstans.operate_pass, Authentication.getAuthenticatedUserId(), now, now, null, operateDesc, FlowConstans.trackType_end);
+    }
+
+    protected void deleteProcessInstance(String user, String processInstanceId) {
         if (StringUtils.hasText(processInstanceId)) {
+
+            //存在时才清理
+            Assert.hasText(user, "user can't empty");
+            engine.getIdentityService().setAuthenticatedUserId(user);
             engine.getRuntimeService().deleteProcessInstance(processInstanceId, "stop");
         }
-    }
 
-    @Override
-    public void stopTask(String user, String taskId) {
-
-    }
-
-    /**
-     * 根据任务ID获得任务实例
-     *
-     * @param taskId 任务ID
-     * @return
-     * @throws Exception
-     */
-    private TaskEntity findTaskById(String taskId) throws Exception {
-        TaskEntity task = (TaskEntity) engine.getTaskService().createTaskQuery().taskId(
-                taskId).singleResult();
-        if (task == null) {
-            throw new Exception("任务实例未找到!");
-        }
-        return task;
-    }
-
-    private ProcessDefinitionEntity findProcessDefinitionEntityByTaskId(
-            String taskId) throws Exception {
-        // 取得流程定义
-        ProcessDefinitionEntity processDefinition = (ProcessDefinitionEntity) ((RepositoryServiceImpl) engine.getRepositoryService())
-                .getDeployedProcessDefinition(findTaskById(taskId)
-                        .getProcessDefinitionId());
-
-        if (processDefinition == null) {
-            throw new Exception("流程定义未找到!");
-        }
-
-        return processDefinition;
-    }
-
-    private ActivityImpl findActivitiImpl(String taskId, String activityId)
-            throws Exception {
-        // 取得流程定义
-        ProcessDefinitionEntity processDefinition = findProcessDefinitionEntityByTaskId(taskId);
-
-        // 获取当前活动节点ID
-        if (!StringUtils.hasText(activityId)) {
-            activityId = findTaskById(taskId).getTaskDefinitionKey();
-        }
-
-        // 根据流程定义，获取该流程实例的结束节点
-        if (activityId.toUpperCase().equals("END")) {
-            for (ActivityImpl activityImpl : processDefinition.getActivities()) {
-                List<PvmTransition> pvmTransitionList = activityImpl
-                        .getOutgoingTransitions();
-                if (pvmTransitionList.isEmpty()) {
-                    return activityImpl;
-                }
-            }
-        }
-
-        // 根据节点ID，获取对应的活动节点
-        ActivityImpl activityImpl = ((ProcessDefinitionImpl) processDefinition)
-                .findActivity(activityId);
-
-        return activityImpl;
     }
 
     public long getUnfinishProcessCount() {
         long count = engine.getRuntimeService().createProcessInstanceQuery().processDefinitionKey(LEAVE_BILL).count();
         return count;
+    }
+
+    @Override
+    public void onExecutionEnd(Object execution) {
+        ExecutionEntity exec = (ExecutionEntity) execution;
+        String deleteReason = exec.getDeleteReason();
+        String processBusinessKey = exec.getProcessBusinessKey();
+        if (existBusinessKey(processBusinessKey)) {
+
+            if (StringUtils.hasText(deleteReason)) {
+                if ("stop".equals(deleteReason)) {
+                    //中止
+                    updateBusinessDataStopAndAddTrack(FlowConstans.status_stoped, processBusinessKey);
+                    return;
+                }
+            } else {
+                //正常结束
+                updateBusinessDataStopAndAddTrack(FlowConstans.status_success, processBusinessKey);
+                return;
+            }
+        }
+    }
+
+    private boolean existBusinessKey(String processBusinessKey) {
+        if (StringUtils.hasText(processBusinessKey)) {
+            return jdbcTemplate.queryForObject("select count(1) from t_data where id=?", Number.class, processBusinessKey).intValue() == 1;
+        }
+        return false;
+    }
+
+    @Override
+    public void onExecutionStart(Object execution) {
+        ExecutionEntity exec = (ExecutionEntity) execution;
+        Assert.notNull(exec.getVariable("flowId"), "flowId can't empty");
+        Date now = new Date();
+        addTrack(exec.getProcessBusinessKey(), FlowConstans.operate_pass, Authentication.getAuthenticatedUserId(), now, now, null, "启动", FlowConstans.trackType_start);
+    }
+
+    @Override
+    public void onTaskCreate(Object delegateTask) {
+
+    }
+
+    @Override
+    public void onTaskAssignment(Object delegateTask) {
+
+    }
+
+    @Override
+    public void onTaskComplete(Object delegateTask) {
+        DelegateTask task = (DelegateTask) delegateTask;
+        String flowId = (String) task.getVariable("flowId");
+        Assert.notNull(flowId, "flowId can't empty");
+        Integer operate = task.getVariableLocal("operate", Integer.class);
+        if (operate == null) {
+            operate = FlowConstans.operate_pass;
+        }
+        String userId = task.getAssignee();
+        Date startTime = task.getCreateTime();
+        Date endTime = new Date();
+        String opinion = (String) task.getVariable("opinion");
+        String name = task.getName();
+        addTrack(flowId, operate, userId, startTime, endTime, opinion, name, FlowConstans.trackType_task);
+    }
+
+    private void addTrack(String flowId, Integer operate, String userId, Date startTime, Date endTime, String opinion, String name, int type) {
+        if (!StringUtils.hasText(userId)) {
+            userId = "0";
+        }
+        int rows = jdbcTemplate.update("insert into t_track (id,userId,startTime,endTime,opinion,operate,title,flowId,type)" +
+                        "values (?,?,?,?,?,?,?,?,?)", Ids.newID(), userId, startTime, endTime, opinion,
+                operate, name, flowId, type);
+        Assert.isTrue(rows == 1);
     }
 }

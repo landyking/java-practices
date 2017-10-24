@@ -4,22 +4,32 @@
              typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath"
              targetNamespace="http://www.activiti.org/processdef">
     <process id="leaveBill" name="请假流程" isExecutable="true">
-
+        <extensionElements>
+            <activiti:executionListener event="start" delegateExpression="${flowerExecutionListener}"/>
+            <activiti:executionListener event="end" delegateExpression="${flowerExecutionListener}"/>
+            <activiti:executionListener event="take" delegateExpression="${flowerExecutionListener}"/>
+        </extensionElements>
         <startEvent id="startLeaveBill" name="启动" activiti:initiator="initiator">
         </startEvent>
         <userTask id="createBill" name="提交申请" activiti:candidateUsers="user,tester">
             <extensionElements>
                 <activiti:taskListener event="create" delegateExpression="${flowerTaskListener}"/>
+                <activiti:taskListener event="assignment" delegateExpression="${flowerTaskListener}"/>
+                <activiti:taskListener event="complete" delegateExpression="${flowerTaskListener}"/>
             </extensionElements>
         </userTask>
         <userTask id="leaderApproval" name="上级领导审批" activiti:candidateUsers="leader,landy">
             <extensionElements>
                 <activiti:taskListener event="create" delegateExpression="${flowerTaskListener}"/>
+                <activiti:taskListener event="assignment" delegateExpression="${flowerTaskListener}"/>
+                <activiti:taskListener event="complete" delegateExpression="${flowerTaskListener}"/>
             </extensionElements>
         </userTask>
         <userTask id="bossApproval" name="经理审批" activiti:assignee="boss">
             <extensionElements>
                 <activiti:taskListener event="create" delegateExpression="${flowerTaskListener}"/>
+                <activiti:taskListener event="assignment" delegateExpression="${flowerTaskListener}"/>
+                <activiti:taskListener event="complete" delegateExpression="${flowerTaskListener}"/>
             </extensionElements>
         </userTask>
         <endEvent id="endLeaveBill" name="结束"></endEvent>
