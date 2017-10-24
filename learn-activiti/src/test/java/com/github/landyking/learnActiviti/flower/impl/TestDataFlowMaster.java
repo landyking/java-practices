@@ -16,7 +16,9 @@ import org.activiti.engine.task.IdentityLink;
 import org.activiti.engine.task.TaskQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -26,6 +28,8 @@ import org.springframework.util.StringUtils;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 
 /**
@@ -38,6 +42,22 @@ import java.util.*;
 public class TestDataFlowMaster implements FlowMaster<TestData>, FlowerCallback {
     public static final String LEAVE_BILL = "leaveBill";
     public static final String LEAVE_BILL_CANDIDATE_BPMN20_XML = "leaveBillCandidate.bpmn20.xml";
+    public static final RowMapper<TestData> TEST_DATA_ROW_MAPPER = new RowMapper<TestData>() {
+        @Override
+        public TestData mapRow(ResultSet rs, int rowNum) throws SQLException {
+            TestData testData = new TestData();
+            testData.setCount(rs.getInt("count"));
+            testData.setEndFlag(rs.getInt("endFlag"));
+            testData.setEndTime(rs.getTimestamp("endTime"));
+            testData.setStartTime(rs.getTimestamp("startTime"));
+            testData.setId(rs.getString("id"));
+            testData.setName(rs.getString("name"));
+            testData.setStatus(rs.getInt("status"));
+            testData.setProcessInstanceId(rs.getString("processInstanceId"));
+            testData.setStarter(rs.getString("starter"));
+            return testData;
+        }
+    };
     private Logger logger = LoggerFactory.getLogger(TestDataFlowMaster.class);
     private ProcessEngine engine;
     private JdbcTemplate jdbcTemplate;
@@ -128,8 +148,8 @@ public class TestDataFlowMaster implements FlowMaster<TestData>, FlowerCallback 
         Assert.notNull(count, "count can't empty");
         Assert.hasText(name, "name can't empty");
         String id = Ids.newID();
-        int update = jdbcTemplate.update("insert into t_data (id,count,name,status,endFlag,startTime) values(?,?,?,?,?,?)"
-                , id, count, name, FlowConstans.status_processing, FlowConstans.end_false, new Date());
+        int update = jdbcTemplate.update("insert into t_data (id,count,name,status,endFlag,startTime,starter) values(?,?,?,?,?,?,?)"
+                , id, count, name, FlowConstans.status_processing, FlowConstans.end_false, new Date(), user);
         Assert.isTrue(update == 1);
         return id;
     }
@@ -156,33 +176,48 @@ public class TestDataFlowMaster implements FlowMaster<TestData>, FlowerCallback 
 
     }
 
+
     @Override
-    public TestData getDetail(String user, String flowId) {
-        ProcessInstance instance = engine.getRuntimeService().createProcessInstanceQuery().processInstanceId(flowId).singleResult();
-        String businessKey = instance.getBusinessKey();
-        return null;
+    public List<Track> getTrackList(String flowId) {
+        return jdbcTemplate.query("select * from t_track where flowId=? order by startTime desc", new RowMapper<Track>() {
+            @Override
+            public Track mapRow(ResultSet rs, int rowNum) throws SQLException {
+                Track t = new Track();
+                t.setId(rs.getString("id"));
+                t.setEndTime(rs.getTimestamp("endTime"));
+                t.setStartTime(rs.getTimestamp("startTime"));
+                t.setFlowId(rs.getString("flowId"));
+                t.setOperate(rs.getInt("operate"));
+                t.setOpinion(rs.getString("opinion"));
+                t.setTitle(rs.getString("title"));
+                t.setType(rs.getInt("type"));
+                t.setUserId(rs.getString("userId"));
+                return t;
+            }
+        }, flowId);
     }
 
     @Override
-    public List<Track> getTrackList(String user, String flowId) {
-        return null;
-    }
-
-    @Override
-    public long getTaskCount(String user) {
+    public long getTaskCount(String user, long timestamp) {
         TaskQuery taskQuery = engine.getTaskService().createTaskQuery().processDefinitionKey(LEAVE_BILL);
         if (StringUtils.hasText(user)) {
             taskQuery = taskQuery.taskCandidateOrAssigned(user);
+        }
+        if (timestamp > 0) {
+            taskQuery = taskQuery.taskCreatedBefore(new Date(timestamp));
         }
         long count = taskQuery.count();
         return count;
     }
 
     @Override
-    public List<Task> getTaskList(final String user, int first, int limit) {
+    public List<Task> getTaskList(final String user, long timestamp, int first, int limit) {
         TaskQuery taskQuery = engine.getTaskService().createTaskQuery().processDefinitionKey(LEAVE_BILL);
         if (StringUtils.hasText(user)) {
             taskQuery = taskQuery.taskCandidateOrAssigned(user);
+        }
+        if (timestamp > 0) {
+            taskQuery = taskQuery.taskCreatedBefore(new Date(timestamp));
         }
         List<org.activiti.engine.task.Task> tasks = taskQuery.listPage(first, limit);
         List<Task> rst = Lists.transform(tasks, new Function<org.activiti.engine.task.Task, Task>() {
@@ -219,11 +254,11 @@ public class TestDataFlowMaster implements FlowMaster<TestData>, FlowerCallback 
     }
 
     @Override
-    public List<Tuple<Task, TestData>> getTaskWithBusinessDataList(String user, int first, int limit) {
+    public List<Tuple<Task, TestData>> getTaskWithBusinessDataList(String user, long timestamp, int first, int limit) {
         List<Tuple<Task, TestData>> rst = Lists.newArrayList();
         while (true) {
             rst.clear();
-            List<Task> taskList = getTaskList(user, first, limit);
+            List<Task> taskList = getTaskList(user, timestamp, first, limit);
             for (Task one : taskList) {
                 TestData detail = getBusinessData(one.getFlowId());
                 if (detail == null) {
@@ -240,10 +275,57 @@ public class TestDataFlowMaster implements FlowMaster<TestData>, FlowerCallback 
         return rst;
     }
 
-    private TestData getBusinessData(String flowId) {
-        TestData testData = new TestData();
-        Assert.notNull(null);
-        return testData;
+    public TestData getBusinessData(String flowId) {
+        try {
+            return jdbcTemplate.queryForObject("select * from t_data where id=?", TEST_DATA_ROW_MAPPER, flowId);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public long getBusinessDataCount(String user, long position, Object... others) {
+        StringBuilder sb = new StringBuilder("select count(*) from t_data where 1=1");
+        List<Object> params = new ArrayList<Object>();
+        if (StringUtils.hasText(user)) {
+            sb.append(" and starter=？");
+            params.add(user);
+        }
+        if (position > 0) {
+            sb.append(" and startTime<?");
+            params.add(new Date(position));
+        }
+        //TODO 租户过滤
+        return jdbcTemplate.queryForObject(sb.toString(), params.toArray(), Number.class).longValue();
+    }
+
+    @Override
+    public long getJoinBusinessDataCount(String user, long position, boolean includeStarter, Object... others) {
+        return 0;
+    }
+
+    @Override
+    public List<TestData> getBusinessDataList(String user, long position, int first, int limit, Object... others) {
+        StringBuilder sb = new StringBuilder("select * from t_data where 1=1");
+        List<Object> params = new ArrayList<Object>();
+        if (StringUtils.hasText(user)) {
+            sb.append(" and starter=？");
+            params.add(user);
+        }
+        if (position > 0) {
+            sb.append(" and startTime<?");
+            params.add(new Date(position));
+        }
+        //TODO 租户过滤
+        sb.append(" order by startTime desc limit ?,?");
+        params.add(first);
+        params.add(limit);
+        return jdbcTemplate.query(sb.toString(), params.toArray(), TEST_DATA_ROW_MAPPER);
+    }
+
+    @Override
+    public List<TestData> getJoinBusinessDataList(String user, long position, boolean includeStarter, int first, int limit, Object... others) {
+        return null;
     }
 
     private Set<String> getTaskCandidate(String taskId) {
@@ -317,11 +399,6 @@ public class TestDataFlowMaster implements FlowMaster<TestData>, FlowerCallback 
             engine.getRuntimeService().deleteProcessInstance(processInstanceId, "stop");
         }
 
-    }
-
-    public long getUnfinishProcessCount() {
-        long count = engine.getRuntimeService().createProcessInstanceQuery().processDefinitionKey(LEAVE_BILL).count();
-        return count;
     }
 
     @Override

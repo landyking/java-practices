@@ -3,6 +3,7 @@ package com.github.landyking.learnActiviti.flower.impl;
 import com.github.landyking.learnActiviti.BasicUseEngine;
 import com.github.landyking.learnActiviti.flower.FlowMaster;
 import com.github.landyking.learnActiviti.flower.Task;
+import com.github.landyking.learnActiviti.flower.Track;
 import com.github.landyking.learnActiviti.flower.Tuple;
 import com.google.common.collect.Maps;
 import org.apache.log4j.PropertyConfigurator;
@@ -14,7 +15,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -72,10 +72,10 @@ public class TestDataFlowMasterTest {
     }
 
     private void showTaskList(String name) {
-        long world = master.getTaskCount(name);
+        long world = master.getTaskCount(name, 0);
         System.out.println(name + "待处理的任务数量: " + world);
         if (world > 0) {
-            List<Task> taskList = master.getTaskList(name, 0, 100);
+            List<Task> taskList = master.getTaskList(name, 0, 0, 100);
             displayTaskList(taskList);
         }
     }
@@ -109,7 +109,7 @@ public class TestDataFlowMasterTest {
     }
 
     private void processTaskList(String name) {
-        List<Task> taskList = master.getTaskList(name, 0, 100);
+        List<Task> taskList = master.getTaskList(name, 0, 0, 100);
         for (Task task : taskList) {
             master.processTask(name, task.getId(), null);
             System.out.println(name + " 完成任务" + task.getId() + ":" + task.getName());
@@ -128,12 +128,12 @@ public class TestDataFlowMasterTest {
 
     @Test
     public void showUnprocessTaskList() throws Exception {
-        long world = master.getTaskCount(null);
+        long world = master.getTaskCount(null, 0);
         System.out.println("待处理的任务数量: " + world);
         if (world > 0) {
            /* List<Task> taskList = master.getTaskList(null, 0, 100);
             displayTaskList(taskList);*/
-            List<Tuple<Task, TestData>> list = master.getTaskWithBusinessDataList(null, 0, 100);
+            List<Tuple<Task, TestData>> list = master.getTaskWithBusinessDataList(null, 0, 0, 100);
             displayTaskWithBusinessDataList(list);
         }
     }
@@ -160,8 +160,22 @@ public class TestDataFlowMasterTest {
     }
 
     @Test
-    public void showAllUnfinishProcess() throws Exception {
-        long unfinishProcessCount = master.getUnfinishProcessCount();
-        System.out.println("未完成的流程数量: " + unfinishProcessCount);
+    public void showTrackList() throws Exception {
+        List<Track> list = master.getTrackList("dc35828d940c47e9b86ed2e41579cb65");
+        for (Track track : list) {
+            System.out.println(track.toString());
+        }
+    }
+
+    @Test
+    public void showTestDataList() throws Exception {
+        long count = master.getBusinessDataCount(null, 0);
+        System.out.println("testdata count: " + count);
+        if (count > 0) {
+            List<TestData> datas = master.getBusinessDataList(null, 0, 0, 100);
+            for (TestData one : datas) {
+                System.out.println(one.toString());
+            }
+        }
     }
 }

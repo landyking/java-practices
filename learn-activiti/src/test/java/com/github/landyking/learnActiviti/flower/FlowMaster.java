@@ -1,6 +1,5 @@
 package com.github.landyking.learnActiviti.flower;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -26,18 +25,23 @@ public interface FlowMaster<T> {
 
     void revokeFlow(String user, String flowId);
 
-    T getDetail(String user, String flowId);
+    T getBusinessData(String flowId);
 
-    List<Track> getTrackList(String user, String flowId);
+    long getBusinessDataCount(String starter, long position, Object... others);
 
-    long getTaskCount(String user);
+    long getJoinBusinessDataCount(String user, long position, boolean includeStarter, Object... others);
 
-    List<Task> getTaskList(String user, int first, int limit);
+    List<T> getBusinessDataList(String starter, long position, int first, int limit, Object... others);
 
-    List<Tuple<Task, T>> getTaskWithBusinessDataList(String user, int first, int limit);
+    List<T> getJoinBusinessDataList(String user, long position, boolean includeStarter, int first, int limit, Object... others);
+
+    List<Track> getTrackList(String flowId);
+
+    long getTaskCount(String user, long position);
+
+    List<Task> getTaskList(String user, long position, int first, int limit);
+
+    List<Tuple<Task, T>> getTaskWithBusinessDataList(String user, long position, int first, int limit);
 
     void stopFlow(String user, String flowId);
-
-
-    long getUnfinishProcessCount();
 }

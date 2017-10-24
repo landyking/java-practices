@@ -18,6 +18,15 @@ public class TestData {
     private int endFlag;
     private Date startTime;
     private Date endTime;
+    private String starter;
+
+    public String getStarter() {
+        return starter;
+    }
+
+    public void setStarter(String starter) {
+        this.starter = starter;
+    }
 
     public Date getStartTime() {
         return startTime;
@@ -81,5 +90,20 @@ public class TestData {
 
     public void setEndFlag(int endFlag) {
         this.endFlag = endFlag;
+    }
+
+    @Override
+    public String toString() {
+        return "TestData{" +
+                "status=" + status +
+                ", id='" + id + '\'' +
+                ", count=" + count +
+                ", name='" + name + '\'' +
+                ", processInstanceId='" + processInstanceId + '\'' +
+                ", endFlag=" + endFlag +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", starter='" + starter + '\'' +
+                '}';
     }
 }
