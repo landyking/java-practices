@@ -21,5 +21,17 @@ public class FlowConstans {
     public static final int trackType_end = 2;
     public static final int trackType_task = 3;
 
+    /**
+     * 初始状态
+     */
+    public static final int revokeFlag_init = 0;
+    /**
+     * 已经撤销
+     */
+    public static final int revokeFlag_revoked = 1;
+    /**
+     * 不可撤销
+     */
+    public static final int revokeFlag_invalid = 2;
 
 }

@@ -19,6 +19,15 @@ public class TestData {
     private Date startTime;
     private Date endTime;
     private String starter;
+    private int revokeFlag;
+
+    public int getRevokeFlag() {
+        return revokeFlag;
+    }
+
+    public void setRevokeFlag(int revokeFlag) {
+        this.revokeFlag = revokeFlag;
+    }
 
     public String getStarter() {
         return starter;

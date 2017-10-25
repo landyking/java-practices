@@ -115,7 +115,16 @@ public class TestDataFlowMasterTest {
             System.out.println(name + " 完成任务" + task.getId() + ":" + task.getName());
         }
     }
-
+    private void displayTaskWithBusinessDataList(List<Tuple<Task, TestData>> list) {
+        for (Tuple<Task, TestData> one : list) {
+            Task task = one.getFirst();
+            if (task.isCandidate()) {
+                System.out.println("flowId:" + task.getFlowId() + ",实例：" + task.getProcessInstanceId() + "，任务ID:" + task.getId() + "，候选人：" + task.getCandidate().toString() + "，任务名称：" + task.getName() + "，任务开始时间：" + task.getStartTime());
+            } else {
+                System.out.println("flowId:" + task.getFlowId() + ",实例：" + task.getProcessInstanceId() + "，任务ID:" + task.getId() + "，所属人：" + task.getUser() + "，任务名称：" + task.getName() + "，任务开始时间：" + task.getStartTime());
+            }
+        }
+    }
     @Test
     public void startNewFlow() throws Exception {
         Map<String, Object> props = Maps.newHashMap();
@@ -125,6 +134,9 @@ public class TestDataFlowMasterTest {
         String flowId = master.startFlow("hello", props);
         System.out.println("开启新流程，id为: " + flowId);
     }
+
+
+
 
     @Test
     public void showUnprocessTaskList() throws Exception {
@@ -137,34 +149,27 @@ public class TestDataFlowMasterTest {
             displayTaskWithBusinessDataList(list);
         }
     }
-
-    private void displayTaskWithBusinessDataList(List<Tuple<Task, TestData>> list) {
-        for (Tuple<Task, TestData> one : list) {
-            Task task = one.getFirst();
-            if (task.isCandidate()) {
-                System.out.println("flowId:" + task.getFlowId() + ",实例：" + task.getProcessInstanceId() + "，任务ID:" + task.getId() + "，候选人：" + task.getCandidate().toString() + "，任务名称：" + task.getName() + "，任务开始时间：" + task.getStartTime());
-            } else {
-                System.out.println("flowId:" + task.getFlowId() + ",实例：" + task.getProcessInstanceId() + "，任务ID:" + task.getId() + "，所属人：" + task.getUser() + "，任务名称：" + task.getName() + "，任务开始时间：" + task.getStartTime());
-            }
-        }
-    }
-
     @Test
     public void stopFlow() throws Exception {
-        master.stopFlow("admin", "6e9bc0acd9af4ca8bbd0898a934d864e");
+        master.stopFlow("admin", "deeb973207bc478ab7e3d1bfab79bdec");
     }
 
     @Test
     public void deleteProcessInstance() throws Exception {
-        ((TestDataFlowMaster) master).deleteProcessInstance("admin", "115001");
+        ((TestDataFlowMaster) master).deleteActivitiProcessInstance("admin", "115001");
     }
 
     @Test
     public void showTrackList() throws Exception {
-        List<Track> list = master.getTrackList("dc35828d940c47e9b86ed2e41579cb65");
+        List<Track> list = master.getTrackList("38eb212412444ca69bbd0a9e9d0eda9f");
         for (Track track : list) {
             System.out.println(track.toString());
         }
+    }
+
+    @Test
+    public void revokeFlow() throws Exception {
+        master.revokeFlow("hello","38eb212412444ca69bbd0a9e9d0eda9f");
     }
 
     @Test

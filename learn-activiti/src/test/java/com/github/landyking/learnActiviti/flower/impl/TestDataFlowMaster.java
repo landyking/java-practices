@@ -58,6 +58,8 @@ public class TestDataFlowMaster implements FlowMaster<TestData>, FlowerCallback 
             return testData;
         }
     };
+    public static final String REASON_STOP = "stop";
+    public static final String REASON_REVOKED = "revoked";
     private Logger logger = LoggerFactory.getLogger(TestDataFlowMaster.class);
     private ProcessEngine engine;
     private JdbcTemplate jdbcTemplate;
@@ -129,13 +131,13 @@ public class TestDataFlowMaster implements FlowMaster<TestData>, FlowerCallback 
             @Override
             public String doInTransaction(TransactionStatus status) {
                 String businessId = doBusinessWork(user, props);
-                engine.getIdentityService().setAuthenticatedUserId(user);
                 props.put("flowId", businessId);
+                engine.getIdentityService().setAuthenticatedUserId(user);
                 ProcessInstance instance = engine.getRuntimeService().startProcessInstanceByKey(LEAVE_BILL, businessId, props);
                 String processInstanceId = instance.getProcessInstanceId();
                 int update = jdbcTemplate.update("update t_data set processInstanceId=? where id=?", processInstanceId, businessId);
                 Assert.isTrue(update == 1);
-                return processInstanceId;
+                return businessId;
             }
         });
 
@@ -155,25 +157,75 @@ public class TestDataFlowMaster implements FlowMaster<TestData>, FlowerCallback 
     }
 
     @Override
-    public void processTask(String user, String taskId, Map<String, Object> props) {
-        TaskQuery taskQuery = engine.getTaskService().createTaskQuery();
-        if (StringUtils.hasText(user)) {
-            taskQuery = taskQuery.taskCandidateOrAssigned(user);
-        }
-        org.activiti.engine.task.Task task = taskQuery
-                .processDefinitionKey(LEAVE_BILL).taskId(taskId).singleResult();
-        if (task == null) {
-            return;
-        }
-        if (!StringUtils.hasText(task.getAssignee())) {
-            engine.getTaskService().claim(taskId, user);
-        }
-        engine.getTaskService().complete(taskId);
+    public void processTask(final String user, final String taskId, Map<String, Object> props) {
+        transactionTemplate.execute(new TransactionCallback<Void>() {
+            @Override
+            public Void doInTransaction(TransactionStatus status) {
+                //查询任务
+                TaskQuery taskQuery = engine.getTaskService().createTaskQuery();
+                if (StringUtils.hasText(user)) {
+                    taskQuery = taskQuery.taskCandidateOrAssigned(user);
+                }
+                org.activiti.engine.task.Task task = taskQuery
+                        .processDefinitionKey(LEAVE_BILL).taskId(taskId).singleResult();
+                Assert.notNull(task, "task: " + taskId + " not exist!");
+                //获取businessKey
+                ProcessInstance processInstance = engine.getRuntimeService().createProcessInstanceQuery().processInstanceId(task.getProcessInstanceId()).singleResult();
+                Assert.notNull(processInstance, "processInstance can't null");
+                String flowId = processInstance.getBusinessKey();
+
+                TestData businessData = getBusinessData(flowId);
+                Assert.notNull(businessData, "businessData: " + flowId + " not exist");
+                //判断是否被撤销
+                int revokeFlag = businessData.getRevokeFlag();
+                if (revokeFlag == FlowConstans.revokeFlag_revoked) {
+                    throw new RuntimeException("flow: " + flowId + " revoked");
+                }
+                if (revokeFlag == FlowConstans.revokeFlag_init) {
+                    //更新flag为不可用，即不能撤销
+                    int update = jdbcTemplate.update("update t_data set revokeFlag=? where id=? and revokeFlag=?", FlowConstans.revokeFlag_invalid, flowId, FlowConstans.revokeFlag_init);
+                    Assert.isTrue(update == 1, "update revokeFlag to invalid failure");
+                }
+
+                if (!StringUtils.hasText(task.getAssignee())) {
+                    engine.getTaskService().claim(taskId, user);
+                }
+                engine.getTaskService().complete(taskId);
+                return null;
+            }
+        });
+
     }
 
     @Override
-    public void revokeFlow(String user, String flowId) {
+    public void revokeFlow(final String user, final String flowId) {
+        transactionTemplate.execute(new TransactionCallback<Void>() {
+            @Override
+            public Void doInTransaction(TransactionStatus status) {
+                //检查状态是否可以撤销
+                TestData businessData = getBusinessData(flowId);
+                Assert.notNull(businessData, "businessData: " + flowId + " not exist!");
+                if (!businessData.getStarter().equals(user)) {
+                    throw new IllegalStateException("user: " + user + " not the owner of business: " + flowId);
+                }
+                if (businessData.getRevokeFlag() != FlowConstans.revokeFlag_init) {
+                    throw new IllegalStateException("revoke failure");
+                } else {
+                    //进行撤销,更新业务数据状态
+                    updateBusinessDataEndAndAddTrack(user, FlowConstans.status_revoked, flowId, FlowConstans.revokeFlag_revoked);
+                    String processInstanceId = businessData.getProcessInstanceId();
+                    if (existActivitiProcessInstance(processInstanceId)) {
+                        //流程数据存在，删除流程数据
+                        deleteActivitiProcessInstance(processInstanceId, REASON_REVOKED);
+                    }
+                }
+                return null;
+            }
+        });
+    }
 
+    private boolean existActivitiProcessInstance(String processInstanceId) {
+        return engine.getRuntimeService().createProcessInstanceQuery().processInstanceId(processInstanceId).count() == 1;
     }
 
 
@@ -357,48 +409,59 @@ public class TestDataFlowMaster implements FlowMaster<TestData>, FlowerCallback 
     }
 
     @Override
-    public void stopFlow(String user, String flowId) {
-        String processInstanceId = null;
-        List<String> rstList = jdbcTemplate.queryForList("select processInstanceId from t_data where id=?", String.class, flowId);
-        if (!rstList.isEmpty()) {
-            processInstanceId = rstList.get(0);
-        }
-        if (!StringUtils.hasText(processInstanceId)) {
-            throw new IllegalArgumentException("Can't found flowId: " + flowId);
-        }
-        if (engine.getRuntimeService().createProcessInstanceQuery().processInstanceId(processInstanceId).count() == 1) {
-            //如果流程数据存在，则删除流程数据，自动触发业务数据状态更新。
-            deleteProcessInstance(user, processInstanceId);
-        } else {
-            //如果流程数据不存在，直接更新业务数据状态。
-            updateBusinessDataStopAndAddTrack(FlowConstans.status_stoped, flowId);
-        }
+    public void stopFlow(final String user, final String flowId) {
+        transactionTemplate.execute(new TransactionCallback<Void>() {
+            @Override
+            public Void doInTransaction(TransactionStatus status) {
+                String processInstanceId = null;
+                List<String> rstList = jdbcTemplate.queryForList("select processInstanceId from t_data where id=?", String.class, flowId);
+                if (!rstList.isEmpty()) {
+                    processInstanceId = rstList.get(0);
+                }
+                if (!StringUtils.hasText(processInstanceId)) {
+                    throw new IllegalArgumentException("Can't found flowId: " + flowId);
+                }
+                if (existActivitiProcessInstance(processInstanceId)) {
+                    //如果流程数据存在，则删除流程数据，自动触发业务数据状态更新。
+                    deleteActivitiProcessInstance(processInstanceId, REASON_STOP);
+                }
+                //更新业务数据状态。
+                updateBusinessDataEndAndAddTrack(user, FlowConstans.status_stoped, flowId, -1);
+                return null;
+            }
+        });
 
     }
 
-    private void updateBusinessDataStopAndAddTrack(int status, String processBusinessKey) {
+    private void updateBusinessDataEndAndAddTrack(String currentUser, int status, String processBusinessKey, int revokeFlag) {
         Date now = new Date();
-        int update = jdbcTemplate.update("update t_data set status=?,endFlag=?,endTime=? where id=? and endFlag=? and status=?",
-                status, FlowConstans.end_true, now, processBusinessKey, FlowConstans.end_false, FlowConstans.status_processing);
         String operateDesc = "";
         if (status == FlowConstans.status_stoped) {
             operateDesc = "中止";
         } else if (status == FlowConstans.status_success) {
             operateDesc = "结束";
+        } else if (status == FlowConstans.status_revoked) {
+            operateDesc = "撤销";
         }
-        Assert.isTrue(update == 1, operateDesc + "流程" + processBusinessKey + "失败");
-        addTrack(processBusinessKey, FlowConstans.operate_pass, Authentication.getAuthenticatedUserId(), now, now, null, operateDesc, FlowConstans.trackType_end);
+        if (status == FlowConstans.status_revoked) {
+            int update = jdbcTemplate.update("update t_data set status=?,endFlag=?,endTime=?,revokeFlag=? where id=? and endFlag=? and status=? and revokeFlag=?",
+                    status, FlowConstans.end_true, now, revokeFlag, processBusinessKey, FlowConstans.end_false, FlowConstans.status_processing, FlowConstans.revokeFlag_init);
+
+            Assert.isTrue(update == 1, operateDesc + "流程" + processBusinessKey + "失败");
+        } else {
+            int update = jdbcTemplate.update("update t_data set status=?,endFlag=?,endTime=? where id=? and endFlag=? and status=?",
+                    status, FlowConstans.end_true, now, processBusinessKey, FlowConstans.end_false, FlowConstans.status_processing);
+
+            Assert.isTrue(update == 1, operateDesc + "流程" + processBusinessKey + "失败");
+        }
+        addTrack(processBusinessKey, FlowConstans.operate_pass, currentUser, now, now, null, operateDesc, FlowConstans.trackType_end);
     }
 
-    protected void deleteProcessInstance(String user, String processInstanceId) {
+    protected void deleteActivitiProcessInstance(String processInstanceId, String reason) {
         if (StringUtils.hasText(processInstanceId)) {
-
             //存在时才清理
-            Assert.hasText(user, "user can't empty");
-            engine.getIdentityService().setAuthenticatedUserId(user);
-            engine.getRuntimeService().deleteProcessInstance(processInstanceId, "stop");
+            engine.getRuntimeService().deleteProcessInstance(processInstanceId, reason);
         }
-
     }
 
     @Override
@@ -406,19 +469,16 @@ public class TestDataFlowMaster implements FlowMaster<TestData>, FlowerCallback 
         ExecutionEntity exec = (ExecutionEntity) execution;
         String deleteReason = exec.getDeleteReason();
         String processBusinessKey = exec.getProcessBusinessKey();
-        if (existBusinessKey(processBusinessKey)) {
-
-            if (StringUtils.hasText(deleteReason)) {
-                if ("stop".equals(deleteReason)) {
-                    //中止
-                    updateBusinessDataStopAndAddTrack(FlowConstans.status_stoped, processBusinessKey);
-                    return;
-                }
-            } else {
+        if (!StringUtils.hasText(deleteReason)) {
+            if (existBusinessKey(processBusinessKey)) {
                 //正常结束
-                updateBusinessDataStopAndAddTrack(FlowConstans.status_success, processBusinessKey);
-                return;
+                updateBusinessDataEndAndAddTrack(null, FlowConstans.status_success, processBusinessKey, -1);
+            } else {
+                logger.warn("process instance: {} end, can't found business key: {}, can't update business status", exec.getProcessInstanceId(), processBusinessKey);
             }
+        } else {
+            //手动删除
+            logger.info("process instance {} end by delete, reason: " + deleteReason, exec.getProcessInstanceId());
         }
     }
 
