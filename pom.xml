@@ -21,6 +21,7 @@
         <module>learn-tomcat</module>
         <module>learn-transaction</module>
         <module>learn-script</module>
+        <module>learn-idGenerator</module>
     </modules>
     <packaging>pom</packaging>
 
