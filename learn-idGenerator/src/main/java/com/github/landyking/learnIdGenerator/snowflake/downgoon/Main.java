@@ -2,6 +2,8 @@ package com.github.landyking.learnIdGenerator.snowflake.downgoon;
 
 import xyz.downgoon.snowflake.Snowflake;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * Description：TODO <br/>
  *
@@ -10,7 +12,7 @@ import xyz.downgoon.snowflake.Snowflake;
  * note:
  */
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
 
         Snowflake snowflake = new Snowflake(2, 5);
         long id1 = snowflake.nextId();
@@ -19,5 +21,16 @@ public class Main {
         snowflake.formatId(id1);
         System.out.println(id1);
         System.out.println(id2);
+        System.out.println("************");
+        System.out.println(GUIDUtil.nextId());
+        System.out.println(GUIDUtil.nextId());
+        System.out.println(GUIDUtil.nextId());
+        System.out.println(GUIDUtil.nextId());
+        TimeUnit.SECONDS.sleep(1);
+        System.out.println("************");
+        System.out.println(GUIDUtil.nextId());
+        System.out.println(GUIDUtil.nextId());
+        System.out.println(GUIDUtil.nextId());
+        System.out.println(GUIDUtil.nextId());
     }
 }
