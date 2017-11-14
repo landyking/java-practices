@@ -23,5 +23,7 @@ files = /usr/local/src/supervisor_program/*.conf
 ```
 [program:app1]
 command=/usr/local/bin/app1 -c /usr/local/src/app1.json
+;user=notrootuser
+;directory=workdir
 ```
 然后重启`service supervisord restart`
