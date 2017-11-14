@@ -43,7 +43,7 @@ Python 2.7.8
 加入到 path 对应的目录 ：
 ```
 export PATH="/usr/local/bin:$PATH"
-or 
+# 或者 
 ln -s /usr/local/bin/python2.7  /usr/bin/python
 # 检查
 [root@dbmasterxxx ~]# python -V
