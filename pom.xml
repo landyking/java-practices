@@ -22,6 +22,7 @@
         <module>learn-transaction</module>
         <module>learn-script</module>
         <module>learn-idGenerator</module>
+        <module>learn-fastdfs</module>
     </modules>
     <packaging>pom</packaging>
 
