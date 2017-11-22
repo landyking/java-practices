@@ -5,6 +5,8 @@ import com.google.common.io.Files;
 import org.csource.common.MyException;
 import org.csource.common.NameValuePair;
 import org.csource.fastdfs.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
@@ -29,6 +31,7 @@ public class FastdfsClientService implements InitializingBean {
     private Environment environment;
     private StorageClient1 client;
     private TrackerServer trackerServer;
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     public FdfsFileInfo uploadFile(MultipartFile file) throws IOException, MyException {
         byte[] data = file.getBytes();
@@ -48,12 +51,15 @@ public class FastdfsClientService implements InitializingBean {
         try {
             return client.upload_file1(data, fileExtension, meta_list);
         } catch (Exception e) {
+
+            logger.info("Exception in fastdfs client, will reset it! Error: {}", e.getMessage());
             resetClient();
             return client.upload_file1(data, fileExtension, meta_list);
         }
     }
 
     private void resetClient() throws IOException {
+
         if (trackerServer != null) {
             try {
                 trackerServer.close();
@@ -107,6 +113,7 @@ public class FastdfsClientService implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        logger.info("Fastdfs client init...");
         resetClient();
     }
 }
