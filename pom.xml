@@ -23,6 +23,8 @@
         <module>learn-script</module>
         <module>learn-idGenerator</module>
         <module>learn-fastdfs</module>
+        <module>learn-ssm</module>
+        <module>learn-samba</module>
     </modules>
     <packaging>pom</packaging>
 
