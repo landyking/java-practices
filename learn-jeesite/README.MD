@@ -1,8 +1,8 @@
-###项目地址
+### 项目地址
 
 https://github.com/landyking/jeesite.git
 
-###请求流程
+### 请求流程
 1.	浏览器打开http://localhost:8181/jeesite。本项目使用的spring mvc。
 1.	spring-mvc.xml中有如下配置：
 	
@@ -134,11 +134,11 @@ https://github.com/landyking/jeesite.git
 	1.	默认选中第一个左侧菜单，加载对应页面。
 	1.	使用了jquery的插件为jquery.jerichotab.js。
 
-###用户和权限系统
-####用户
-####机构
-####区域
-####角色
-####菜单
+### 用户和权限系统
+#### 用户
+#### 机构
+#### 区域
+#### 角色
+#### 菜单
 
-###内置组件
+### 内置组件
