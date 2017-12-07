@@ -1,3 +1,5 @@
+### 查询
+
 >   查看表空间的名称及大小
 ```sql
 SELECT t.tablespace_name, round(SUM(bytes / (1024 * 1024)), 0) ts_size 
@@ -66,4 +68,42 @@ GROUP BY tablespace_name) a,
 FROM dba_data_files 
 GROUP BY tablespace_name) b 
 WHERE a.tablespace_name = b.tablespace_name 
+```
+### 创建
+> 创建临时表空间
+```sql
+create temporary tablespace ywk_temp
+tempfile '/home/data/oracle/oradata/ora11tbs/ywk_temp.dbf'
+size 50m
+autoextend on
+next 50m maxsize 1024m
+extent management local;
+```
+>   创建表空间
+```sql
+create tablespace ywk_data
+logging
+datafile '/home/data/oracle/oradata/ora11tbs/ywk_data.dbf'
+size 50m
+autoextend on
+next 50m maxsize 1024m
+extent management local;
+```
+>   创建用户并指定表空间
+```sql
+create user yiwangkao identified by ywkpass
+default tablespace ywk_data
+temporary tablespace ywk_temp;
+```
+>   给用户授权-普通权限
+```sql
+grant connect,resource to yiwangkao;
+```
+>   给用户授权-dba权限
+```sql
+grant connect,resource,dba to user_name;
+```
+>   修改用户密码
+```sql
+alter user yiwangkao identified by ywkpass;
 ```
