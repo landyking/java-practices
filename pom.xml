@@ -25,6 +25,7 @@
         <module>learn-fastdfs</module>
         <module>learn-ssm</module>
         <module>learn-samba</module>
+        <module>learn-mavenPlugin</module>
     </modules>
     <packaging>pom</packaging>
 
