@@ -1,0 +1,79 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <base th:href="${basePath}" href="/"/>
+    <title>后台管理系统</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link href="assets/css/dpl-min.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/css/bui-min.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/css/main-min.css" rel="stylesheet" type="text/css"/>
+    <style>
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 此节点内部的内容会在弹出框内显示,默认隐藏此节点-->
+<div id="content" class="hidden">
+    <form id="form" method="post" action="data/api/login.json" class="form-horizontal">
+        <div class="row">
+            <div class="control-group span8">
+                <label class="control-label">账号：</label>
+                <div class="controls">
+                    <input type="text" name="username" class="input-normal control-text" data-rules="{required : true}"/>
+                </div>
+            </div>
+            <div class="control-group span8">
+                <label class="control-label">密码：</label>
+                <div class="controls">
+                    <input type="password" name="password" class="input-normal control-text"
+                           data-rules="{required : true}"/>
+                </div>
+            </div>
+        </div>
+        <div class="row form-actions">
+            <div class="span13 offset3 ">
+                <button type="submit" class="button button-primary">登录</button>
+                <button type="reset" class="button">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script type="text/javascript" src="assets/js/jquery-1.8.1.min.js"></script>
+<script type="text/javascript" src="./assets/js/bui.js"></script>
+<script type="text/javascript" src="./assets/js/config.js"></script>
+<script type="text/javascript" src="./assets/js/common.js"></script>
+
+<script>
+    BUI.use(['bui/overlay', 'bui/form'], function (Overlay, Form) {
+
+        var form = new Form.HForm({
+            srcNode: '#form',
+            submitType : 'ajax',
+            callback : function(data){
+                if(data.success) {
+//                    BUI.Message.Alert('登录成功',function(){
+                        window.location = "main.html";
+//                    },'info');
+                }else{
+                    BUI.Message.Alert('登录失败：'+data.message,'warning');
+                }
+            }
+        }).render();
+
+        var dialog = new Overlay.Dialog({
+            closeable: false,
+            title: '<center>后台登录</center>',
+            width: 400,
+//              height:20,
+            buttons: [],
+            //配置DOM容器的编号
+            contentId: 'content',
+        });
+        dialog.show();
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <base th:href="${basePath}" href="/"/>
+    <title>后台管理系统</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link href="assets/css/dpl-min.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/css/bui-min.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/css/main-min.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+
+<div class="header">
+
+    <div class="dl-title">
+        <span class="lp-title-port"></span><span class="dl-title-text">后台管理系统</span>
+    </div>
+    <div class="dl-log">欢迎您，<span id="currentUserSpan" class="dl-log-user"></span>
+        <a href="#" id="changePassLink" title="修改密码" class="dl-log-quit">[修改密码]</a>
+        <a href="#" id="logoutLink" title="退出系统" class="dl-log-quit">[退出]</a>
+    </div>
+</div>
+<ul id="J_NavContent" class="dl-tab-conten">
+
+</ul>
+<script type="text/javascript" src="assets/js/jquery-1.8.1.min.js"></script>
+<script type="text/javascript" src="assets/js/bui.js"></script>
+<script type="text/javascript" src="assets/js/config.js"></script>
+<script type="text/javascript" src="assets/js/common.js"></script>
+
+<script>
+    $.get("data/sapi/currentUser.json").done(function (rst) {
+        $("#currentUserSpan").text(rst.username);
+//          console.log(rst);
+    });
+    BUI.use(['common/main', 'bui/overlay', 'bui/form', 'bui/mask'], function (comain, Overlay, Form) {
+        var config = [{
+            id: 'menu',
+//            homePage: 'code',
+            menu: [{
+                text: '新闻管理',
+                items: [
+                    {id: 'code', text: '栏目管理', href: 'main/category/categoryList.html'},
+                    {id: 'main-menu', text: '文章管理', href: 'main/article/articleList.html'}
+                ]
+            }, {
+                text: '考核管理',
+                items: [
+                    {id: 'operation', text: '考核人员设置', href: 'main/operation.html'},
+                    {id: 'quick', text: '考核人员同步', href: 'main/quick.html'},
+                    {id: 'quick', text: '人工考核', href: 'main/dyna-menu.html'}
+                ]
+            }, {
+                text: '考核统计',
+                items: [
+                    {id: 'resource', text: '月度考核排名', href: 'main/resource.html'},
+                    {id: 'loader', text: '考核得分查询', href: 'main/loader.html'}
+                ]
+            }, {
+                text: '系统管理',
+                items: [
+                    {id: 'manager-list', text: '管理员列表', href: 'main/manager/managerList.html'},
+                    {id: 'examine-item-list', text: '考核项管理', href: 'main/examine/examineItemList.html'},
+                    {id: 'code', text: '后台服务管理', href: 'main/code.html'},
+                    {id: 'grid', text: '操作日志', href: 'main/grid.html'}
+                ]
+            }
+            ]
+        }];
+        new PageUtil.MainPage({
+            modulesConfig: config
+        });
+        $("#logoutLink").click(function () {
+            $.get("data/api/logout.json").always(function () {
+                window.location = "login.html";
+            });
+            return false;
+        });
+
+
+        $('#changePassLink').on('click', function () {
+
+            if (top.topManager) {
+                //打开左侧菜单中配置过的页面
+                top.topManager.openPage({
+                    id: 'tmp-change-password',
+                    href: 'main/changePass.html',
+                    title: "修改密码"
+                });
+            }
+            return false;
+        });
+    });
+</script>
+</body>
+</html>

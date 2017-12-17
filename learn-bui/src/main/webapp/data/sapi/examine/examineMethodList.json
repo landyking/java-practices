@@ -1,0 +1,17 @@
+{
+  "rows": [
+    {
+      "id": "123",
+      "description": "考核方法描述11111",
+      "score": "1",
+      "policeClassDesc": "治安、社区"
+    },
+    {
+      "id": "124",
+      "description": "考核方法描述222222",
+      "score": "0.5",
+      "policeClassDesc": "治安"
+    }
+  ],
+  "results": 2
+}

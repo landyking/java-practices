@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+           http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context-4.0.xsd
+           http://www.springframework.org/schema/mvc 
+						http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd">
+
+
+    <bean class="org.springframework.web.servlet.mvc.support.ControllerClassNameHandlerMapping">
+        <property name="basePackage" value="com.github.landyking.learnBui.controller"/>
+        <property name="caseSensitive" value="true"/>
+        <property name="order" value="0"/>
+        <property name="alwaysUseFullPath" value="true"/>
+    </bean>
+    <!-- 注解 -->
+    <context:component-scan base-package="app.controller"></context:component-scan>
+
+    <bean class="org.thymeleaf.spring4.view.ThymeleafViewResolver">
+        <property name="templateEngine" ref="templateEngine"/>
+        <property name="characterEncoding" value="UTF-8"/>
+    </bean>
+    <bean id="templateResolver"
+          class="org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver">
+        <property name="cacheable" value="false"/>
+        <property name="prefix" value="/"/>
+        <property name="suffix" value=".html"/>
+        <property name="templateMode" value="HTML"/>
+        <property name="characterEncoding" value="UTF-8"/>
+    </bean>
+
+    <bean id="templateEngine"
+          class="org.thymeleaf.spring4.SpringTemplateEngine">
+        <property name="templateResolver" ref="templateResolver"/>
+    </bean>
+
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <bean class="app.config.web.BasePathInterceptor"/>
+        </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <bean class="app.config.web.ConfigPushInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
+    <mvc:resources mapping="/assets/**" location="/assets/" order="0"/>
+    <mvc:resources mapping="/data/**" location="/data/" order="0"/>
+    <mvc:view-controller path="/**"/>
+    <!-- 文件上传的
+        id不能随便起 必须是multipartResolver
+    -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="defaultEncoding" value="utf-8"></property>
+        <property name="maxUploadSize" value="102400000"></property>
+        <property name="maxInMemorySize" value="409600"></property>
+    </bean>
+
+</beans>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <base th:href="${basePath}" href="/"/>
+    <title>考核项管理</title>
+    <link href="assets/css/dpl-min.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/css/bui-min.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/css/page.css" rel="stylesheet" type="text/css"/>
+</head>
+<style type="text/css">
+
+</style>
+<body>
+<div class="">
+    <div class="row">
+        <div class="span7">
+            <div class="panel panel-small panel-head-borded">
+                <div class="panel-header">
+                    <h3>考核项</h3>
+                </div>
+                <div class="panel-body clearfix">
+                    <div id="examineItemTree"></div>
+                </div>
+            </div>
+
+        </div>
+        <div class="offset7">
+            <div class="panel panel-small">
+                <div class="panel-header">
+                    <h3>考核标准 - <span class="examine-item-name"></span></h3>
+                </div>
+                <div class="panel-body">
+                    <p id="examineStandard"></p>
+                </div>
+            </div>
+            <div class="panel panel-small panel-head-borded" style="margin-top: 10px;">
+                <div class="panel-header">
+                    <h3>考核方法 - <span class="examine-item-name"></span></h3>
+                </div>
+                <div class="panel-body clearfix">
+                    <div id="examineMethodGrid">
+                        <!-- </div> -->
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script type="text/javascript" src="assets/js/jquery-1.8.1.min.js"></script>
+    <script type="text/javascript" src="assets/js/bui.js"></script>
+    <script type="text/javascript" src="assets/js/config-min.js"></script>
+    <script type="text/javascript" src="assets/js/common.js"></script>
+    <script type="text/javascript">
+        BUI.use('common/page');
+    </script>
+    <script type="text/javascript">
+        BUI.use(['bui/tree', 'bui/data', 'bui/grid'], function (Tree, Data, Grid) {
+
+            var Store = BUI.Data.Store,
+                    columns = [
+                        {title: 'ID', dataIndex: 'id', visible: false},
+                        {title: '方法描述', dataIndex: 'description', width: 200},
+                        {title: '方法得分', width: 50, dataIndex: 'score'},
+                        {title: '适用警种', dataIndex: 'policeClassDesc'}
+                    ];
+            var gridStore = new Store({
+                        url: 'data/sapi/examine/examineMethodList.json',
+                        autoLoad: true,
+                        pageSize: 10
+                    }),
+                    grid = new Grid.Grid({
+                        height: 400,
+                        render: '#examineMethodGrid',
+                        columns: columns,
+                        loadMask: true,
+                        forceFit: true,
+                        plugins: [Grid.Plugins.RowNumber],
+                        store: gridStore,
+                        bbar: {
+                            pagingBar: true
+                        }
+                    });
+            grid.render();
+
+            //一次性异步加载所有数据
+            var store = new Data.TreeStore({
+                url: 'data/sapi/examine/examineItemTree.json',
+                autoLoad: true
+            });
+
+            var tree = new Tree.TreeList({
+                render: '#examineItemTree',
+                showLine: true,
+                height: 450,
+                store: store
+            });
+            tree.render();
+
+
+            tree.on('itemclick', function (ev) {
+                var item = ev.item;
+                if (item.leaf) {
+                    console.log("点击叶子节点", item);
+                    $("#examineStandard").text(item.standard);
+                    $(".examine-item-name").text(item.text);
+                    gridStore.load({
+                        "itemId": item.id
+                    });
+                } else {
+                    console.log("点击父节点", item);
+                }
+            });
+
+
+        });
+    </script>
+    <!-- script end -->
+</div>
+</body>
+</html>

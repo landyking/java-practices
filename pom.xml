@@ -26,6 +26,7 @@
         <module>learn-ssm</module>
         <module>learn-samba</module>
         <module>learn-mavenPlugin</module>
+        <module>learn-bui</module>
     </modules>
     <packaging>pom</packaging>
 

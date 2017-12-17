@@ -1,0 +1,85 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <base th:href="${basePath}" href="/"/>
+    <title>修改密码</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link href="assets/css/dpl-min.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/css/bui-min.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/css/page-min.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <form id="J_Form" method="post" action="data/sapi/changePassword.json" class="form-horizontal span24">
+            <div class="row">
+                <div class="control-group span8">
+                    <label class="control-label"><s>*</s>旧密码：</label>
+                    <div class="controls">
+                        <input name="oldPass" type="text" data-rules="{required:true}"
+                               class="input-normal control-text"/>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="control-group span8">
+                    <label class="control-label"><s>*</s>新密码：</label>
+                    <div class="controls">
+                        <input name="newPass" type="text" data-rules="{required:true}"
+                               class="input-normal control-text" />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="control-group span8">
+                    <label class="control-label"><s>*</s>重复新密码：</label>
+                    <div class="controls">
+                        <input name="newPass2" type="text" data-rules="{required:true}"
+                               class="input-normal control-text"/>
+                    </div>
+                </div>
+            </div>
+            <div class="row form-actions actions-bar">
+                <div class="span13 offset3 ">
+                    <button type="submit" class="button button-primary">保存</button>
+                    <button type="reset" class="button">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script type="text/javascript" src="assets/js/jquery-1.8.1.min.js"></script>
+<script type="text/javascript" src="assets/js/bui-min.js"></script>
+<script type="text/javascript" src="assets/js/config-min.js"></script>
+<script type="text/javascript">
+    BUI.use('common/page');
+</script>
+<script type="text/javascript">
+    BUI.use(['bui/form', 'bui/overlay'], function (Form, Overlay) {
+        var form = new Form.HForm({
+            srcNode: '#J_Form',
+            submitType: 'ajax',
+            callback: function (data) {
+                var form = this;
+                if (!data.success && data.errors) {
+                    BUI.each(data.errors, function (v, k) {
+                        var field = form.getField(k);
+                        if (field) {
+                            field.showErrors([v]);
+                        }
+                    });
+                } else {
+                    BUI.Message.Alert('密码修改成功', function () {
+                        if (top.topManager) {
+                            top.topManager.closePage();
+                        }
+                    }, 'info');
+                }
+            }
+        });
+
+        form.render();
+    });
+</script>
+</body>
+</html>

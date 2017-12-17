@@ -1,0 +1,221 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <base th:href="${basePath}" href="/"/>
+    <title> 顶部导航</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link href="assets/css/dpl-min.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/css/bui-min.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/css/page.css" rel="stylesheet" type="text/css"/>
+    <!-- <link href="../assets/css/ueditor/codemirror.css" rel="stylesheet" type="text/css" /> -->
+    <link href="assets/lib/themes/default/css/ueditor.min.css" rel="stylesheet" type="text/css"/>
+
+    <!-- 富文本 -->
+    <script type="text/javascript" charset="utf-8" src="assets/lib/ueditor.config.js"></script>
+    <script type="text/javascript" charset="utf-8" src="assets/lib/ueditor.all.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="assets/lib/ueditor.parse.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="assets/lib/lang/zh-cn/zh-cn.js"></script>
+    <!--<script type="text/javascript" src="assets/js/uploader.js"></script>-->
+    <!--<script type="text/javascript" src="assets/js/swf-min.js"></script>-->
+</head>
+<style type="text/css">
+    #J_Uploader .bui-simple-list {
+        display: none;
+    }
+</style>
+<body>
+<div class='container'>
+    <input id="currentDataId" type="hidden" value="" th:value="${param.id}"/>
+    <form id="J_Form" class="form-horizontal" action="" method="post">
+        <input type="hidden" id="articleId" name="articleId"/>
+        <div class="row">
+            <div class="control-group">
+                <label class="control-label"><s>*</s>栏目：</label>
+                <div class="controls">
+                    <div id="categorySelect">
+                        <input type="hidden" id="categoryId" name="categoryId" data-rules="{required:true}"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="control-group">
+                <label class="control-label"><s>*</s>标题：</label>
+                <div class="controls">
+                    <input type="text" class="input-large" name="title" data-rules="{required:true}"/>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="control-group">
+                <label class="control-label">简介：</label>
+                <div class="controls  control-row-auto">
+                                <textarea id="" class="control-row4 input-large" name="brief"
+                                          data-rules="{required:false}"></textarea>
+                </div>
+            </div>
+        </div>
+        <!--   <div class="control-group">
+            <label class="control-label" >图片：</label>
+            <div class="controls  control-row-auto">
+              <textarea class="control-row4 input-large" name="pictureId" data-rules="{required:false}"></textarea>
+            </div>
+          </div>   -->
+        <div class="row">
+            <div class="control-group">
+                <label class="control-label">题图：</label>
+                <div class="controls control-row-auto">
+                    <div class="span-width span5">
+                        <!-- <div class="row"> -->
+                        <div id="J_Uploader"></div>
+                        <img class="hide" id="pic"/>
+                        <input type="hidden" id="pictureId" name="pictureId">
+                        <!-- </div>                    -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="control-group">
+                <label class="control-label"><s>*</s>内容：</label>
+                <div class="controls control-row-auto">
+                    <script id="ueditor" type="text/plain" style="width:600px;height:250px;"
+                            name="content"></script>
+                </div>
+            </div>
+        </div>
+        <div class="row form-actions  actions-bar">
+            <div class="span13 offset3">
+                <button type="submit" class="button button-primary">保存</button>
+                <button type="reset" class="button">重置</button>
+            </div>
+        </div>
+    </form>
+    <script type="text/javascript" src="assets/js/jquery-1.8.1.min.js"></script>
+    <script type="text/javascript" src="assets/js/bui-1.1.21.js"></script>
+    <script type="text/javascript" src="assets/js/config-min.js"></script>
+    <script type="text/javascript" src="assets/js/common.js"></script>
+    <script type="text/javascript">
+        BUI.use('common/page');
+    </script>
+    <script type="text/javascript">
+        var ue = UE.getEditor('ueditor');
+        BUI.use(['common/search', 'bui/grid', 'bui/data', 'bui/uploader', 'bui/form'], function (Search, Grid, Data, Uploader, Form) {
+            var categoryListStore = new BUI.Data.Store({
+                url: 'sapi/selectCategoryList',
+                autoLoad: true,
+                root: "rows"
+            });
+            var select = new BUI.Select.Select({
+                render: '#categorySelect',
+                valueField: '#categoryId',
+                store: categoryListStore
+            });
+            select.render();
+
+            function showUploadPicture(pictureId) {
+                var $pic = $('#pic');
+                $pic.hide();
+                $pic.attr('src', 'api/download?fileId=' + pictureId);
+                $("#pictureId").val(pictureId);
+                $pic.load(function () {
+                    var newWidth = $pic.width(), newHeight = $pic.height();
+                    var unit = 300;
+                    var wOffset = newWidth - unit, hOffset = newHeight - unit;
+                    if (wOffset > hOffset) {
+                        if (wOffset > 0) {
+                            //设置宽300
+                            $pic.width(300);
+                            $pic.height('auto');
+                        } else {
+                            //设置宽newWidth
+                            $pic.width(newWidth);
+                            $pic.height('auto');
+                        }
+                    } else {
+                        if (hOffset > 0) {
+                            //设置高300
+                            $pic.height(300);
+                            $pic.width('auto');
+                        } else {
+                            //设置高newHeight;
+                            $pic.height(newHeight);
+                            $pic.width('auto');
+                        }
+                    }
+                    $pic.show();
+                });
+
+            }
+
+            //上传文件
+            var uploader = new Uploader.Uploader({
+                render: '#J_Uploader',
+                url: 'sapi/attachment/upload',
+                isSuccess: function (result) {
+
+                    if (result && result.url) {
+                        // BUI.Message.Alert(" result.url);
+                        showUploadPicture(result.url);
+                    } else {
+                        BUI.Message.Alert("上传失败");
+                    }
+                }
+            }).render();
+            var currentDataId = $("#currentDataId").val();
+            if (currentDataId) {
+                $("#J_Form").attr("action", "sapi/articleUpdate");
+            } else {
+                $("#J_Form").attr("action", "sapi/articleInsert");
+            }
+            //表单渲染
+            var form = new Form.Form({
+                srcNode: '#J_Form',
+                submitType: 'ajax',
+                callback: function (data) {
+                    var form = this;
+                    if (!data.success && data.errors) {
+                        BUI.each(data.errors, function (v, k) {
+                            var field = form.getField(k);
+                            if (field) {
+                                field.showErrors([v]);
+                            }
+                        });
+                    } else {
+                        var msg = "";
+                        if (currentDataId) {
+                            msg = "更新成功";
+                        } else {
+                            msg = "新增成功";
+                        }
+                        BUI.Message.Alert(msg, function () {
+                            if (top.topManager) {
+                                top.topManager.closePage();
+                            }
+                        }, 'info');
+                    }
+                }
+            }).render();
+
+            if (currentDataId) {
+                $.ajax({
+                    type: 'get',
+                    url: "sapi/articleDetail?articleId=" + currentDataId,
+                    success: function (rst) {
+                        form.setRecord(rst);
+                        select.setSelectedValue('');
+                        select.setSelectedValue(rst.categoryId);
+                        if (rst.pictureId) {
+                            showUploadPicture(rst.pictureId);
+                        }
+                        if (rst.content) {
+                            ue.setContent(rst.content);
+                        }
+                    }
+                })
+            }
+        });
+    </script>
+</div>
+</body>
+</html>
