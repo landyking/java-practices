@@ -23,8 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@EnableAutoConfiguration
-@ComponentScan(basePackages = "com.github.landyking.learnFastdfs")
 public class SampleController {
     ObjectMapper JSON = new ObjectMapper();
     @Resource
@@ -37,9 +35,6 @@ public class SampleController {
         return "Hello World!";
     }
 
-    public static void main(String[] args) throws Exception {
-        SpringApplication.run(SampleController.class, args);
-    }
 
     @RequestMapping("/uploadFile")
     @ResponseBody
