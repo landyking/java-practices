@@ -23,7 +23,7 @@ public class SampleController {
     ObjectMapper JSON = new ObjectMapper();
     @Resource
     private FastdfsClientService clientService;
-    private Logger logger;
+    private Logger logger = org.slf4j.LoggerFactory.getLogger(getClass());
 
     @RequestMapping("/")
     @ResponseBody
@@ -39,7 +39,7 @@ public class SampleController {
         List<FdfsFileInfo> rst = new ArrayList<FdfsFileInfo>();
         for (MultipartFile one : files) {
             FdfsFileInfo tmp = clientService.uploadFile(one);
-            logger = org.slf4j.LoggerFactory.getLogger(getClass());
+
             logger.info("one file upload, name: {}, size: {}, fileId: {}", tmp.getFileName(), tmp.getFileSize(), tmp.getFileId());
             rst.add(tmp);
         }
@@ -55,18 +55,17 @@ public class SampleController {
             logger.info("one file query, name: {}, size: {}, fileId: {}", fileInfo.getFileName(), fileInfo.getFileSize(), fileInfo.getFileId());
             return fileInfo;
         } else {
-            response.sendError(404);
-            return null;
+            return JSON.createObjectNode().put("success", false).put("msg", "file: " + fileId + " not exist!");
         }
     }
 
     @RequestMapping("/download")
-    public void download(String fileId, HttpServletResponse response) throws IOException, MyException {
+    @ResponseBody
+    public Object download(String fileId, HttpServletResponse response) throws IOException, MyException {
         Assert.hasText(fileId, "fileId is empty");
         FdfsFileInfo tmp = clientService.getFileInfo(fileId);
         if (tmp == null) {
-            response.sendError(404);
-            return;
+            return JSON.createObjectNode().put("success", false).put("msg", "file: " + fileId + " not exist!");
         }
         byte[] bytes = clientService.downloadFile(fileId);
         logger.info("one file download, name: {}, size: {}, fileId: {}", tmp.getFileName(), tmp.getFileSize(), tmp.getFileId());
@@ -76,5 +75,6 @@ public class SampleController {
         response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"; filename*=utf-8''" + fileName);
         response.getOutputStream().write(bytes);
         response.getOutputStream().close();
+        return null;
     }
 }
