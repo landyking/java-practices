@@ -2,17 +2,13 @@ package com.github.landyking.learnFastdfs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Charsets;
-import org.apache.log4j.spi.LoggerFactory;
 import org.csource.common.MyException;
-import org.csource.fastdfs.FileInfo;
 import org.slf4j.Logger;
-import org.springframework.boot.*;
-import org.springframework.boot.autoconfigure.*;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.*;
+import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
@@ -44,25 +40,36 @@ public class SampleController {
         for (MultipartFile one : files) {
             FdfsFileInfo tmp = clientService.uploadFile(one);
             logger = org.slf4j.LoggerFactory.getLogger(getClass());
-            logger.info("one file upload, name: {}, size: {}, fileId: {}",tmp.getFileName(),tmp.getFileSize(),tmp.getFileId());
+            logger.info("one file upload, name: {}, size: {}, fileId: {}", tmp.getFileName(), tmp.getFileSize(), tmp.getFileId());
             rst.add(tmp);
         }
         return rst;
     }
+
     @RequestMapping("/fileInfo")
     @ResponseBody
-    public Object fileInfo(String fileId) throws IOException, MyException {
+    public Object fileInfo(String fileId, HttpServletResponse response) throws IOException, MyException {
         Assert.hasText(fileId, "fileId is empty");
         FdfsFileInfo fileInfo = clientService.getFileInfo(fileId);
-        logger.info("one file query, name: {}, size: {}, fileId: {}",fileInfo.getFileName(),fileInfo.getFileSize(),fileInfo.getFileId());
-        return fileInfo;
+        if (fileInfo != null) {
+            logger.info("one file query, name: {}, size: {}, fileId: {}", fileInfo.getFileName(), fileInfo.getFileSize(), fileInfo.getFileId());
+            return fileInfo;
+        } else {
+            response.sendError(404);
+            return null;
+        }
     }
+
     @RequestMapping("/download")
     public void download(String fileId, HttpServletResponse response) throws IOException, MyException {
         Assert.hasText(fileId, "fileId is empty");
-        byte[] bytes = clientService.downloadFile(fileId);
         FdfsFileInfo tmp = clientService.getFileInfo(fileId);
-        logger.info("one file download, name: {}, size: {}, fileId: {}",tmp.getFileName(),tmp.getFileSize(),tmp.getFileId());
+        if (tmp == null) {
+            response.sendError(404);
+            return;
+        }
+        byte[] bytes = clientService.downloadFile(fileId);
+        logger.info("one file download, name: {}, size: {}, fileId: {}", tmp.getFileName(), tmp.getFileSize(), tmp.getFileId());
         String fileName = tmp.getFileName();
         fileName = URLEncoder.encode(fileName, Charsets.UTF_8.name());
         response.setContentType(MediaType.APPLICATION_OCTET_STREAM.toString());
