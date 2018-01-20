@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.BlogMapper">
+    <select id="selectBlog" resultType="hashmap" parameterType="int">
+        select t.*,u.* from t_department t,t_app_user u where t.id = u.dep_id
+        <if test="_parameter >=1">
+            and 1=#{id}
+        </if>
+        <if test="_parameter >=2">
+            and 2=#{id}
+        </if>
+    </select>
+</mapper>
