@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true">
+    <property name="log_home" value="${catalina.base:-${java.io.tmpdir:-/tmp}}/csHome/logs"/>
+    <!-- 项目发布时，为提高运行效率可以去掉stdout -->
+    <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%date{yy-MM-dd HH:mm:ss} [%thread] %-5level %logger{10}.%M\(%line\) - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="logfile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${log_home}/csagent.log</File>
+        <encoder>
+            <pattern>%date{yy-MM-dd HH:mm:ss} [%thread] %-5level %logger{10} - %msg%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <maxIndex>30</maxIndex>
+            <FileNamePattern>${log_home}/csagent.%i.log</FileNamePattern>
+        </rollingPolicy>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <MaxFileSize>100MB</MaxFileSize>
+        </triggeringPolicy>
+        <!--<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>csagent.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>-->
+    </appender>
+    <logger name="org.springframework.web" level="ERROR"/>
+    <logger name="com.xdja" level="INFO"/>
+    <root level="INFO">
+        <appender-ref ref="stdout"/>
+        <!--<appender-ref ref="logfile"/>-->
+    </root>
+</configuration>

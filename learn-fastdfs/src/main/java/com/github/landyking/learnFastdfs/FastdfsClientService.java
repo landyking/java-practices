@@ -91,6 +91,9 @@ public class FastdfsClientService implements InitializingBean {
             return null;
         }
         NameValuePair[] metadata1 = client.get_metadata1(fileId);
+        if (metadata1 == null) {
+            return null;
+        }
         FdfsFileInfo rst = new FdfsFileInfo();
         rst.setFileName(getFileName(metadata1));
         rst.setFileSize(file_info1.getFileSize());
