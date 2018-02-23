@@ -1,3 +1,7 @@
+### 登录sqlplus 
+命令 `sqlplus  username/password as sysdba`  
+如：`sqlplus sys/admin as sysdba`
+
 ### 查询
 
 >   查看表空间的名称及大小

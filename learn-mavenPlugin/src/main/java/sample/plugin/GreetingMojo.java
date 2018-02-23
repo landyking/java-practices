@@ -13,12 +13,10 @@ public class GreetingMojo extends AbstractMojo {
     /*
      * My boolean.
         */
-    @Parameter(property = "myBoolean")
-    private boolean _myBoolean;
-    public void setMyBoolean(boolean myBoolean){
-        _myBoolean=myBoolean;
-    }
+    @Parameter()
+    private boolean myBoolean;
+
     public void execute() throws MojoExecutionException {
-        getLog().info("Hello, world. "+_myBoolean);
+        getLog().info("Hello, world. " + myBoolean);
     }
 }

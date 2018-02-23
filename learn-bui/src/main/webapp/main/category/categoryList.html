@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <base th:href="${basePath}" href="/"/>
+    <title>栏目列表</title>
+    <link href="assets/css/dpl-min.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/css/bui-min.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/css/page.css" rel="stylesheet" type="text/css"/>
+</head>
+<style type="text/css">
+
+</style>
+<body>
+<div class="container">
+    <div class="row">
+        <!-- <div class="s"> -->
+        <div id="grid">
+            <!-- </div> -->
+        </div>
+    </div>
+    <div id="content" class="hide">
+        <form id="J_Form" class="form-horizontal">
+            <div class="row">
+                <div class="span16 doc-content">
+                    <form action="" class="form-horizontal">
+                        <div class="control-group">
+                            <label class="control-label">栏目名称：</label>
+                            <div class="controls">
+                                <input type="text" class="input-large" name="name"/>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">栏目编码：</label>
+                            <div class="controls">
+                                <input type="text" class="input-large" name="code"/>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script type="text/javascript" src="assets/js/jquery-1.8.1.min.js"></script>
+    <script type="text/javascript" src="assets/js/bui-1.1.21.js"></script>
+    <script type="text/javascript" src="assets/js/config-min.js"></script>
+    <script type="text/javascript" src="assets/js/common.js"></script>
+    <script type="text/javascript">
+        BUI.use('common/page');
+    </script>
+    <script type="text/javascript">
+        BUI.use(['bui/grid', 'bui/data'], function (Grid, Data) {
+            var Grid = BUI.Grid,
+                Store = BUI.Data.Store,
+                columns = [
+                    {title: '栏目id', width: 100, dataIndex: 'categoryId'},
+                    {title: '栏目名称', width: 100, dataIndex: 'name'},
+                    {title: '栏目编码', width: 100, dataIndex: 'code'},
+                    {title: '创建时间', width: 150, dataIndex: 'createTimeDesc'},
+                    {
+                        title: '操作', width: 150, renderer: function () {
+                        return '<span class="grid-command btn-edit">修改</span>' +
+                            '<span class="grid-command btn-delete">删除</span>';
+                    }
+                    }
+                ];
+            var store = new Store({
+                    url: 'sapi/categoryList',
+                    autoLoad: true,
+                    pageSize: 10
+                }),
+               //修改 编辑
+                editing = new Grid.Plugins.DialogEditing({
+                    contentId: 'content',
+                    triggerCls: 'btn-edit'
+                }),
+                grid = new Grid.Grid({
+                    height: 400,
+                    render: '#grid',
+                    loadMask: true,
+                    forceFit: true,
+                    columns: columns,
+                    store: store,
+                    plugins: [Grid.Plugins.RowNumber,editing], //勾选插件、自适应宽度插件
+                    // 顶部工具栏
+                    tbar: {
+                        items: [{
+                            btnCls: 'button button-small',
+                            text: '<i class="icon-plus"></i>新增栏目',
+                            listeners: {
+                                'click': addFunction
+                            }
+                        }]
+                    },
+                    // 底部工具栏
+                    bbar: {
+                        //items 也可以在此配置
+                        // pagingBar:表明包含分页栏
+                        pagingBar: true
+                    }
+                });
+
+            grid.render();
+            //新增
+            function addFunction() {
+                var newData = {name: '请输入栏目名称'};
+                editing.add(newData); //添加记录后，直接编辑
+            }
+
+            editing.on("accept", function (ev, form) {
+                console.log("编辑的记录信息", ev.record);
+                if (ev.record.categoryId) {
+                    $.ajax({
+                        type: "POST",
+                        url: "sapi/categoryUpdate",
+                        data: $.extend(ev.record, {
+                            id: ev.record.categoryId
+                        }),
+                        success: function (rst) {
+                            if (rst.success) {
+                                BUI.Message.Alert('操作成功', 'info');
+                            } else {
+                                BUI.Message.Alert('操作失败：'+rst.message, 'error');
+                            }
+                            store.load();
+                        }
+                    });
+
+                }
+                else {
+                    $.ajax({
+                        type: "POST",
+                        url: "sapi/categoryInsert",
+                        data: ev.record,
+                        success: function (rst) {
+                            if (rst.success) {
+                                BUI.Message.Alert('操作成功', 'info');
+                            } else {
+                                BUI.Message.Alert('操作失败：'+rst.message, 'error');
+                            }
+                            store.load();
+                        }
+                    });
+
+                }
+
+            });
+            grid.on('cellclick', function (ev) {
+                var record = ev.record, //点击行的记录
+                    field = ev.field, //点击对应列的dataIndex
+                    target = $(ev.domTarget); //点击的元素
+                if (target.hasClass('btn-delete')) {
+                    BUI.Message.Alert('确定删除该记录？', function () {
+                        $.ajax({
+                            type: "POST",
+                            url: "sapi/categoryDelete",
+                            data: {id: ev.record.categoryId},
+                            success: function (rst) {
+                                if (rst.success) {
+                                    BUI.Message.Alert('操作成功', 'info');
+                                } else {
+                                    BUI.Message.Alert('操作失败：'+rst.message, 'error');
+                                }
+                                store.load();
+                            }
+                        });
+                    }, 'info');
+
+                }
+            });
+        })
+    </script>
+    <!-- script end -->
+</div>
+</body>
+</html>

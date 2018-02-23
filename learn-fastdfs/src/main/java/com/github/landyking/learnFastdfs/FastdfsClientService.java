@@ -7,10 +7,7 @@ import org.csource.common.NameValuePair;
 import org.csource.fastdfs.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -90,7 +87,13 @@ public class FastdfsClientService implements InitializingBean {
 
     public FdfsFileInfo getFileInfo(String fileId) throws IOException, MyException {
         FileInfo file_info1 = client.get_file_info1(fileId);
+        if (file_info1 == null) {
+            return null;
+        }
         NameValuePair[] metadata1 = client.get_metadata1(fileId);
+        if (metadata1 == null) {
+            return null;
+        }
         FdfsFileInfo rst = new FdfsFileInfo();
         rst.setFileName(getFileName(metadata1));
         rst.setFileSize(file_info1.getFileSize());

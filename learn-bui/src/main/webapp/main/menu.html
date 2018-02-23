@@ -1,0 +1,305 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <base th:href="${basePath}" href="/"/>
+    <title> 顶部导航</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link href="assets/css/dpl-min.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/css/bui-min.css" rel="stylesheet" type="text/css"/>
+    <!-- <link href="../assets/css/ueditor/codemirror.css" rel="stylesheet" type="text/css" /> -->
+    <link href="assets/lib/themes/default/css/ueditor.min.css" rel="stylesheet" type="text/css"/>
+
+    <!-- 富文本 -->
+    <script type="text/javascript" charset="utf-8" src="assets/lib/ueditor.config.js"></script>
+    <script type="text/javascript" charset="utf-8" src="assets/lib/ueditor.all.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="assets/lib/ueditor.parse.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="assets/lib/lang/zh-cn/zh-cn.js"></script>
+    <!--<script type="text/javascript" src="assets/js/uploader.js"></script>-->
+    <!--<script type="text/javascript" src="assets/js/swf-min.js"></script>-->
+</head>
+<style type="text/css">
+    .control-text {
+        width: 170px;
+    }
+
+    .bui-grid-table .bui-grid-hd {
+        text-align: center;
+    }
+
+    .bui-grid-table .bui-grid-cell, .bui-grid-table .bui-grid-cell-empty {
+        text-align: center;
+    }
+
+    #searchForm {
+        position: relative;
+    }
+
+    .addText {
+        position: absolute;
+        top: 20px;
+        left: 350px;
+    }
+
+    .defaultTheme .bui-queue-item .default, .defaultTheme .bui-queue-item .success, .defaultTheme .bui-queue-item .progress, .defaultTheme .bui-queue-item .error {
+        margin-right: 110px;
+    }
+</style>
+<body>
+<div class='demo-content'>
+    <div class="row">
+        <form id="searchForm" class="form-horizontal">
+            <div class="row">
+                <div class="control-group offset1" style="margin-top: 20px">
+                    <input type="text" class="control-text span-width span6" placeholder="请输入关键字"/>
+                    <button type="button" id="btnSearch" class="button button-primary">查询</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="search-grid-container">
+        <div id="grid"></div>
+    </div>
+    <div id="content" class="hide">
+        <form id="J_Form" class="form-horizontal">
+            <div class="row">
+                <div class="span16 doc-content">
+                    <form action="" class="form-horizontal">
+                        <div class="control-group">
+                            <label class="control-label">栏目id：</label>
+                            <div class="controls">
+                                <div id="categorySelect">
+                                    <input type="hidden" id="categoryId" name="categoryId"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">标题：</label>
+                            <div class="controls">
+                                <input type="text" class="input-large" name="title"/>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">简介：</label>
+                            <div class="controls  control-row-auto">
+                                <textarea id="" class="control-row4 input-large" name="brief"
+                                          data-rules="{required:false}"></textarea>
+                            </div>
+                        </div>
+                        <!--   <div class="control-group">
+                            <label class="control-label" >图片：</label>
+                            <div class="controls  control-row-auto">
+                              <textarea class="control-row4 input-large" name="pictureId" data-rules="{required:false}"></textarea>
+                            </div>
+                          </div>   -->
+                        <div class="control-group">
+                            <label class="control-label">题图：</label>
+                            <div class="controls control-row-auto">
+                                <div class="span-width span5" name="pictureId">
+                                    <!-- <div class="row"> -->
+                                    <img class="hide" style="height: 100%" id="pic"/>
+                                    <div id="J_Uploader"></div>
+                                    <!-- </div>                    -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">内容：</label>
+                            <div class="controls control-row-auto">
+                                <script id="editor" type="text/plain" style="width:450px;height:200px;"
+                                        name="content"></script>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script type="text/javascript" src="assets/js/jquery-1.8.1.min.js"></script>
+    <script type="text/javascript" src="assets/js/bui-1.1.21.js"></script>
+    <script type="text/javascript" src="assets/js/config-min.js"></script>
+    <script type="text/javascript" src="assets/js/common.js"></script>
+    <script type="text/javascript">
+        BUI.use('common/page');
+        var ue = UE.getEditor('editor');
+    </script>
+    <script type="text/javascript">
+
+        BUI.use(['common/search', 'bui/grid', 'bui/data', 'bui/uploader', 'bui/form'], function (Search, Grid, Data, Uploader, Form) {
+            var categoryListStore = new BUI.Data.Store({
+                url: 'sapi/selectCategoryList',
+                autoLoad: true,
+                root: "rows"
+            });
+            var select = new BUI.Select.Select({
+                render: '#categorySelect',
+                valueField: '#categoryId',
+                store: categoryListStore
+            });
+            select.render();
+            var Grid = BUI.Grid,
+                Store = BUI.Data.Store,
+                columns = [
+                    {title: '文章标题', dataIndex: 'title', width: 200},
+                    {title: '栏目', width: 50, dataIndex: 'categoryName'},
+                    {title: '栏目id', dataIndex: 'categoryId', visible: false},
+                    {title: '是否轮播', dataIndex: 'carousel', width: 50, checkable: true},
+                    {title: '发布人id', dataIndex: 'creator', visible: false},
+                    {title: '发布人', width: 50, dataIndex: 'creatorName'},
+                    {title: '发布时间', dataIndex: 'createTimeDesc', width: 50},
+                    {
+                        title: '操作', width: 50, renderer: function () {
+                        return '<span class="grid-command btn-edit">编辑</span>' +
+                            '<span class="grid-command btn-del">删除</span>';
+                    }
+                    }
+                ];
+            var store = new Store({
+                    url: 'sapi/articleList',
+                    autoLoad: true,
+                    pageSize: 10
+                }),
+                //新增
+                editing = new Grid.Plugins.DialogEditing({
+                    contentId: 'content',
+                    triggerCls: 'btn-edit'
+                }),
+
+                grid = new Grid.Grid({
+                    render: '#grid',
+                    columns: columns,
+                    loadMask: true,
+                    forceFit: true,
+                    plugins: [editing, Grid.Plugins.ColumnChecked],
+                    store: store,
+                    tbar: {
+                        items: [{
+                            btnCls: 'button button-primary addText',
+                            text: '增加文章',
+                            listeners: {
+                                'click': addFunction
+                            }
+                        }]
+                    },
+                    bbar: {
+                        pagingBar: true
+                    }
+                });
+            grid.render();
+
+            editing.on("recordchange", function (ev) {
+                console.log('当前记录', arguments);
+                select.setSelectedValue('');
+                select.setSelectedValue(ev.record.categoryId);
+            });
+
+            function validFn(value, obj) {
+                var records = store.getResult(),
+                    rst = '';
+                BUI.each(records, function (record) {
+                    if (record.a == value && obj != record) {
+                        rst = '文本不能重复';
+                        return false;
+                    }
+                });
+                return rst;
+            }
+
+            function addFunction() {
+                editing.add({}); //添加记录后，直接编辑
+
+            }
+
+            editing.on("accept", function (ev, form) {
+                console.log("编辑的记录信息", ev.record);
+                if (ev.record.articleId) {
+                    $.post("sapi/articleUpdate", $.extend(ev.record, {
+                        articleId: ev.record.articleId
+                    }))
+                        .done(function (rst) {
+                            if (rst.success) {
+                                BUI.Message.Alert('编辑文章成功', 'info');
+                            }
+                        })
+                        .fail(function () {
+                            BUI.Message.Alert('编辑文章失败', 'error');
+                        }).always(function () {
+                        store.load();
+                    });
+                } else {
+                    $.post("sapi/articleInsert", ev.record)
+                        .done(function (rst) {
+                            if (rst.success) {
+                                BUI.Message.Alert('新增文章成功', 'info');
+                            }
+                        })
+                        .fail(function () {
+                            BUI.Message.Alert('新增文章失败', 'error');
+                        }).always(function () {
+                        store.load();
+                    });
+                }
+            });
+            store.on("update", function (e) {
+                if (e.field == 'carousel') {
+                    console.log("更新状态为：", e.value);
+                    var articleId = e.record.articleId;
+                    $.ajax({
+                        type: "POST",
+                        url: "sapi/articleCarousel",
+                        data: {
+                            articleId: articleId,
+                            carousel: e.value
+                        },
+                        success: function (rst) {
+                            if (!rst.success) {
+                                BUI.Message.Alert(rst.message, 'error');
+                            }
+                            store.load();
+                        }
+                    });
+                }
+            });
+            //删除
+            grid.on('cellclick', function (ev) {
+                var record = ev.record,
+                    field = ev.field,
+                    target = $(ev.domTarget);
+                if (target.hasClass('btn-del')) {
+                    BUI.Message.Alert('确定删除该记录？', function () {
+                        $.post("sapi/articleDelete", {
+                            articleId: ev.record.articleId,
+                            categoryId: ev.record.categoryId
+                        })
+                            .done(function (rst) {
+                                if (rst.success) {
+                                    BUI.Message.Alert('操作成功', 'info');
+                                }
+                            })
+                            .fail(function () {
+                                BUI.Message.Alert('操作失败', 'error');
+                            }).always(function () {
+                            store.load();
+                        });
+                    }, 'info');
+
+                }
+            });
+            //上传文件
+            var uploader = new Uploader.Uploader({
+                render: '#J_Uploader',
+                url: 'sapi/attachment/upload',
+                isSuccess: function (result) {
+
+                    if (result && result.url) {
+                        // BUI.Message.Alert(" result.url);
+                        $('#pic').attr('src', 'api/download?fileId=' + result.url).show();
+                    } else {
+                        BUI.Message.Alert("上传失败");
+                    }
+                }
+            }).render();
+        })
+    </script>
+</div>
+</body>
+</html>

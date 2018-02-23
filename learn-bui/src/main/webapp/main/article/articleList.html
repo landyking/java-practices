@@ -1,0 +1,174 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <base th:href="${basePath}" href="/"/>
+    <title> 顶部导航</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link href="assets/css/dpl-min.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/css/bui-min.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/css/page.css" rel="stylesheet" type="text/css"/>
+</head>
+<style type="text/css">
+</style>
+<body>
+<div class='container'>
+    <div class="row">
+        <form id="searchForm" class="form-horizontal">
+            <div class="control-group">
+                <input type="text" name="titleKey" id="titleKey" class="control-text span-width span6"
+                       placeholder="请输入关键字"/>
+                <button type="button" id="btnSearch" class="button button-primary">查询</button>
+            </div>
+        </form>
+    </div>
+    <div class="row">
+        <div id="grid"></div>
+    </div>
+    <div id="content" class="hide">
+
+    </div>
+    <script type="text/javascript" src="assets/js/jquery-1.8.1.min.js"></script>
+    <script type="text/javascript" src="assets/js/bui-1.1.21.js"></script>
+    <script type="text/javascript" src="assets/js/config-min.js"></script>
+    <script type="text/javascript" src="assets/js/common.js"></script>
+    <script type="text/javascript">
+        BUI.use('common/page');
+    </script>
+    <script type="text/javascript">
+
+        BUI.use(['common/search', 'bui/grid', 'bui/data', 'bui/uploader', 'bui/form'], function (Search, Grid, Data, Uploader, Form) {
+            var Store = BUI.Data.Store,
+                columns = [
+                    {title: '文章标题', dataIndex: 'title', width: 200},
+                    {title: '栏目', width: 50, dataIndex: 'categoryName'},
+                    {title: '栏目id', dataIndex: 'categoryId', visible: false},
+                    {title: '是否轮播', dataIndex: 'carousel', width: 50, checkable: true},
+                    {title: '发布人id', dataIndex: 'creator', visible: false},
+                    {title: '发布人', width: 50, dataIndex: 'creatorName'},
+                    {title: '发布时间', dataIndex: 'createTimeDesc', width: 50},
+                    {
+                        title: '操作', width: 50, renderer: function () {
+                        return '<span class="grid-command btn-edit">编辑</span>' +
+                            '<span class="grid-command btn-del">删除</span>';
+                    }
+                    }
+                ];
+            var store = new Store({
+                    url: 'sapi/articleList',
+                    autoLoad: true,
+                    pageSize: 10
+                }),
+                grid = new Grid.Grid({
+                    height: 400,
+                    render: '#grid',
+                    columns: columns,
+                    loadMask: true,
+                    forceFit: true,
+                    plugins: [Grid.Plugins.RowNumber, Grid.Plugins.ColumnChecked],
+                    store: store,
+                    tbar: {
+                        items: [{
+                            btnCls: 'button button-small',
+                            text: '<i class="icon-plus"></i>新增文章',
+                            listeners: {
+                                'click': addFunction
+                            }
+                        }]
+                    },
+                    bbar: {
+                        pagingBar: true
+                    }
+                });
+            grid.render();
+
+            function validFn(value, obj) {
+                var records = store.getResult(),
+                    rst = '';
+                BUI.each(records, function (record) {
+                    if (record.a == value && obj != record) {
+                        rst = '文本不能重复';
+                        return false;
+                    }
+                });
+                return rst;
+            }
+
+            function addFunction() {
+                if (top.topManager) {
+                    //打开左侧菜单中配置过的页面
+                    top.topManager.openPage({
+                        id: 'article-add',
+                        href: 'main/article/articleForm.html',
+                        title: "新增文章"
+                    });
+                }
+            }
+
+            store.on("update", function (e) {
+                if (e.field == 'carousel') {
+//                    console.log("更新状态为：", e.value);
+                    var articleId = e.record.articleId;
+                    $.ajax({
+                        type: "POST",
+                        url: "sapi/articleCarousel",
+                        data: {
+                            articleId: articleId,
+                            carousel: e.value
+                        },
+                        success: function (rst) {
+                            if (!rst.success) {
+                                BUI.Message.Alert(rst.message, 'error');
+                            }
+                            store.load();
+                        }
+                    });
+                }
+            });
+            //删除
+            grid.on('cellclick', function (ev) {
+                var record = ev.record,
+                    field = ev.field,
+                    target = $(ev.domTarget);
+                if (target.hasClass('btn-del')) {
+                    BUI.Message.Alert('确定删除该记录？', function () {
+                        $.ajax({
+                            type: "POST",
+                            url: "sapi/articleDelete",
+                            data: {
+                                articleId: ev.record.articleId,
+                                categoryId: ev.record.categoryId
+                            },
+                            success: function (rst) {
+                                if (rst.success) {
+                                    BUI.Message.Alert('操作成功', 'info');
+                                } else {
+                                    BUI.Message.Alert('操作失败：' + rst.message, 'error');
+                                }
+                                store.load();
+                            }
+                        });
+                    }, 'info');
+
+                } else if (target.hasClass('btn-edit')) {
+                    if (top.topManager) {
+                        //打开左侧菜单中配置过的页面
+                        top.topManager.openPage({
+                            id: 'article-edit',
+                            href: 'main/article/articleForm.html?id='+ev.record.articleId,
+                            title: "编辑文章"
+                        });
+                    }
+                }
+            });
+            //搜索功能
+            $("#btnSearch").click(function () {
+                var titleKey = $("#titleKey").val();
+                store.load({
+                    titleKey: titleKey
+                });
+            });
+        })
+    </script>
+</div>
+</body>
+</html>
