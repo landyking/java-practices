@@ -68,6 +68,7 @@ public class FastdfsClientService implements InitializingBean {
         ClientGlobal.setG_tracker_http_port(environment.getProperty("fastdfs.tracker_http_port", Integer.class, 8080));
         String servers = environment.getRequiredProperty("fastdfs.tracker_server");
         Assert.hasText(servers, "fastdfs.tracker_server is empty");
+        System.out.println("fastdfs.tracker_server=" + servers);
         List<InetSocketAddress> list = new ArrayList<InetSocketAddress>();
         Iterable<String> split = Splitter.on(",").split(servers);
         for (String one : split) {
