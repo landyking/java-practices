@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<directive>
+    <description><![CDATA[师大附小曾发生]]></description>
+    <input>
+        <param name="" desc="" notEmpty="" default="" fixed="">
+            <processors>
+                <outputScript></outputScript>
+                <ageCalc></ageCalc>
+            </processors>
+        </param>
+    </input>
+    <output>
+        <param></param>
+    </output>
+    <dbSql storage="">
+
+    </dbSql>
+    <dependencys>
+        <dependency></dependency>
+    </dependencys>
+</directive>
