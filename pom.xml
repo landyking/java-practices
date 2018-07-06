@@ -29,6 +29,7 @@
         <module>learn-bui</module>
         <module>learn-mybatis3</module>
         <module>learn-xml</module>
+        <module>learn-springel</module>
     </modules>
     <packaging>pom</packaging>
 
