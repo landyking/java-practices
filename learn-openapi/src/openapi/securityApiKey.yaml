@@ -1,0 +1,73 @@
+openapi:  3.0.0
+info:
+  title: test security
+  description:  how to config security
+  version: 1.0.1
+
+servers:
+  - url: http://192.168.50.133:4010
+    description: mock server
+paths:
+  /login:
+    post:
+      summary:  login api
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  description:  密码
+                  type: string
+                  example:  'user001'
+                password:
+                  description:  账号
+                  type: string
+                  format: password
+                  example:  '000000'
+      responses:
+        200:
+          description:  login result
+          headers:
+            itoken:
+              schema:
+                type: string
+                example:  'uuid-uuid-uuid-uuid'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                    example:  'ok'
+
+  /test:
+    get:
+      summary: first api
+      description: first api description
+      responses:
+        '200':
+          description:  success result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+
+components:
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: itoken
+
+security:
+  - apiKeyAuth: []
