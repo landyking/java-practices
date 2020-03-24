@@ -7,41 +7,66 @@
     <groupId>com.github.landyking</groupId>
     <artifactId>daydayup</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <modules>
-        <module>learn-activiti</module>
-        <module>learn-json</module>
-        <module>learn-jasperReports</module>
-        <module>learn-spring-plugin</module>
-        <module>learn-jeesite</module>
-        <module>learn-yisaitong</module>
-        <module>learn-metainfo</module>
-        <module>learn-shiro</module>
-        <module>learn-jna</module>
-        <module>learn-concurrency</module>
-        <module>learn-tomcat</module>
-        <module>learn-transaction</module>
-        <module>learn-script</module>
-        <module>learn-idGenerator</module>
-        <module>learn-ssm</module>
-        <module>learn-samba</module>
-        <module>learn-mavenPlugin</module>
-        <module>learn-bui</module>
-        <module>learn-mybatis3</module>
-        <module>learn-xml</module>
-        <module>learn-springel</module>
-        <module>learn-openapi</module>
-        <module>learn-apt</module>
-        <module>learn-apt-demo</module>
-    </modules>
     <packaging>pom</packaging>
 
     <properties>
-        <java.version>1.6</java.version>
+        <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.build.timestamp.format>yyyyMMddHHmmss</maven.build.timestamp.format>
         <build.timestamp>${maven.build.timestamp}</build.timestamp>
     </properties>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>4.12</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-expression</artifactId>
+                <version>4.3.12.RELEASE</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-core</artifactId>
+                <version>4.3.12.RELEASE</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context</artifactId>
+                <version>4.3.12.RELEASE</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context-support</artifactId>
+                <version>4.3.12.RELEASE</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.plugin</groupId>
+                <artifactId>spring-plugin-core</artifactId>
+                <version>1.1.0.RELEASE</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.plugin</groupId>
+                <artifactId>spring-plugin-integration</artifactId>
+                <version>1.1.0.RELEASE</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.plugin</groupId>
+                <artifactId>spring-plugin-metadata</artifactId>
+                <version>1.1.0.RELEASE</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-test</artifactId>
+                <version>3.2.8.RELEASE</version>
+                <scope>test</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
     <build>
         <plugins>
             <plugin>
