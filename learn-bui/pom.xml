@@ -19,7 +19,7 @@
         <maven.build.timestamp.format>yyyyMMddHHmmss</maven.build.timestamp.format>
         <build.timestamp>${maven.build.timestamp}</build.timestamp>
 
-        <shiro.version>1.6.0</shiro.version>
+        <shiro.version>1.7.0</shiro.version>
         <customGenerator.version>1.5-SNAPSHOT</customGenerator.version>
     </properties>
     <dependencies>
